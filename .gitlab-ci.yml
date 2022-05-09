@@ -6,4 +6,4 @@ maven-package:
   script:
     - cp -r /home/pzy/dist ./src/main/resources/static/
     - mvn package -Dmaven.test.skip=true
-    - cp -r target /home/pzy/target
+    - cp -r target /home/se/target
