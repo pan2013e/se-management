@@ -3,12 +3,12 @@ stages:
 
 cache:
   paths:
-    - /home/se/.m2/repository/
+    - .m2/repository/
     - target/
 
 maven-package:
   stage: build
   script:
     - cp -r /home/se/dist ./src/main/resources/static/
-    - mvn package -Dmaven.test.skip=true
+    - mvn package -Dmaven.test.skip=true -Dmaven.repo.local=./.m2
     - cp -r target /home/se/target
