@@ -4,6 +4,6 @@ stages:
 maven-package:
   stage: build
   script:
-    - cp -r /home/pzy/dist ./src/main/resources/static/
+    - cp -r /home/se/dist ./src/main/resources/static/
     - mvn package -Dmaven.test.skip=true
     - cp -r target /home/se/target
