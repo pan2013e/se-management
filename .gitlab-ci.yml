@@ -1,6 +1,11 @@
 stages: 
   - build
 
+cache:
+  paths:
+    - /home/se/.m2/repository/
+    - target/
+
 maven-package:
   stage: build
   script:
