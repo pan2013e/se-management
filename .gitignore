@@ -4,7 +4,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 src/main/resources/META-INF/
-src/test/resources/static/
+src/test/resources/static/dist/
 .DS_Store
 
 ### STS ###
@@ -34,3 +34,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/**/node_modules/
+frontend/src/.umi/**
