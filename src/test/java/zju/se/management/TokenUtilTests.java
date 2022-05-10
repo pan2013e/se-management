@@ -10,7 +10,7 @@ import zju.se.management.authentication.TokenUtil;
 public class TokenUtilTests {
 
     @Test
-    public void test() {
+    public void test() throws Exception {
         User user = new User();
         user.setId(1);
         user.setUserName("admin");

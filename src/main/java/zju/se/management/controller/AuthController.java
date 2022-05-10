@@ -29,8 +29,7 @@ public class AuthController {
     public Response login(@RequestParam(value = "userName") String userName,
                           @RequestParam(value = "password") String password) {
         try{
-            String hashed = userService.getPasswordByName(userName);
-            boolean validationResult = CryptoUtil.validate(password, hashed);
+            boolean validationResult = CryptoUtil.validate(password, userService.getPasswordByName(userName));
             if (validationResult) {
                 String token = TokenUtil.getToken(userService.getUserByName(userName));
                 return new Response(0, new TokenResponseData(userName, token), "登录成功");
@@ -38,25 +37,24 @@ public class AuthController {
                 return new Response(-1, null, "密码错误");
             }
         } catch (Exception e) {
-            return new Response(-1, null, "用户名不存在");
+            return new Response(-1, null, e.getMessage());
         }
     }
 
     @PostMapping("/register")
     public Response register(@RequestParam(value = "userName") String userName,
-                             @RequestParam(value = "password") String password,
-                             @RequestParam(value = "role") String role) {
-
-        if (userService.getUserByName(userName) != null) {
-            return new Response(-1, null, "用户名已存在");
+                             @RequestParam(value = "password") String password) {
+        try{
+            userService.getUserByName(userName);
+            User user = new User();
+            user.setUserName(userName);
+            user.setPassword(CryptoUtil.encrypt(password));
+            user.setRole(User.userType.PATIENT);
+            userService.addUser(user);
+            return new Response(0, null, "注册成功");
+        } catch (Exception e) {
+            return new Response(-1, null, e.getMessage());
         }
-        String hashed = CryptoUtil.encrypt(password);
-        User user = new User();
-        user.setUserName(userName);
-        user.setPassword(hashed);
-        user.setRole(User.userType.valueOf(role));
-        userService.addUser(user);
-        return new Response(0, null, "注册成功");
     }
 
     @PostMapping("/verify")

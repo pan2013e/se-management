@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zju.se.management.repository.UserRepository;
 import zju.se.management.entity.User;
+import zju.se.management.utils.UserNotFoundException;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User getUserByName(String name) {
+    public User getUserByName(String name) throws UserNotFoundException{
         List<User> list = userRepository.findByUserName(name);
         if(list.isEmpty()) {
             return null;
@@ -38,12 +39,11 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User addUser(User user) {
+    public void addUser(User user) {
         userRepository.save(user);
-        return user;
     }
 
-    public String getPasswordByName(String name) {
+    public String getPasswordByName(String name) throws UserNotFoundException {
         User user = getUserByName(name);
         return user.getPassword();
     }
