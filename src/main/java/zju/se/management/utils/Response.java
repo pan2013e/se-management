@@ -1,4 +1,4 @@
-package zju.se.management.controller;
+package zju.se.management.utils;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

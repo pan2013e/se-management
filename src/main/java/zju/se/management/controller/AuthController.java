@@ -11,6 +11,7 @@ import zju.se.management.authentication.TokenUtil;
 import zju.se.management.entity.User;
 import zju.se.management.service.UserService;
 import zju.se.management.utils.AccessControlResponseData;
+import zju.se.management.utils.Response;
 import zju.se.management.utils.TokenResponseData;
 
 @RestController
@@ -29,7 +30,7 @@ public class AuthController extends BaseController {
     @PostMapping("/login")
     @ApiOperation(value = "用户登录", notes = "前端登陆界面使用")
     public Response<TokenResponseData> login(@RequestParam(value = "userName") String userName,
-                          @RequestParam(value = "password") String password) {
+                                             @RequestParam(value = "password") String password) {
         try{
             boolean validationResult = CryptoUtil.validate(password, userService.getPasswordByName(userName));
             if (validationResult) {

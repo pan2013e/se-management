@@ -1,5 +1,6 @@
 package zju.se.management.controller;
 
+import zju.se.management.utils.Response;
 import zju.se.management.utils.ResponseData;
 
 public class BaseController {

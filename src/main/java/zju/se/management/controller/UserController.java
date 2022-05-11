@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import zju.se.management.authentication.CryptoUtil;
 import zju.se.management.entity.User;
 import zju.se.management.service.UserService;
+import zju.se.management.utils.Response;
 import zju.se.management.utils.UserListResponseData;
 import zju.se.management.utils.UserNotFoundException;
 import zju.se.management.utils.UserResponseData;
