@@ -14,7 +14,7 @@ import zju.se.management.utils.UserResponseData;
 @RequestMapping("/api/privileged")
 @CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
-public class UserController {
+public class UserController extends BaseController {
 
     private final UserService userService;
 
@@ -24,32 +24,32 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public Response getUser() {
-        return new Response(0, new UserListResponseData(userService.getAllUsers()), "查询成功");
+    public Response<UserListResponseData> getUser() {
+        return ResponseOK(new UserListResponseData(userService.getAllUsers()), "查询成功");
     }
 
     @GetMapping("/user/id/{id}")
-    public Response getUserById(@PathVariable("id") Integer id) {
+    public Response<UserResponseData> getUserById(@PathVariable("id") Integer id) {
         try {
             User user = userService.getUserById(id);
-            return new Response(0, new UserResponseData(user), "查询成功");
+            return ResponseOK(new UserResponseData(user), "查询成功");
         } catch (Exception e) {
-            return new Response(-1, null, e.getMessage());
+            return ResponseError(e.getMessage());
         }
     }
 
     @GetMapping("/user/name/{name}")
-    public Response getUserByName(@PathVariable("name") String name) throws UserNotFoundException {
+    public Response<UserResponseData> getUserByName(@PathVariable("name") String name) throws UserNotFoundException {
         try {
             User user = userService.getUserByName(name);
-            return new Response(0, new UserResponseData(user), "查询成功");
+            return ResponseOK(new UserResponseData(user), "查询成功");
         } catch (Exception e) {
-            return new Response(-1, null, e.getMessage());
+            return ResponseError(e.getMessage());
         }
     }
 
     @PostMapping("/user")
-    public Response addUser(
+    public Response<?> addUser(
             @RequestParam(value = "userName") String userName,
             @RequestParam(value = "password") String password,
             @RequestParam(value = "role") String role) {
@@ -60,9 +60,9 @@ public class UserController {
             user.setPassword(CryptoUtil.encrypt(password));
             user.setRole(User.userType.valueOf(role));
             userService.addUser(user);
-            return new Response(0, null, "注册成功");
+            return ResponseOK("添加成功");
         } catch (Exception e) {
-            return new Response(1, null, e.getMessage());
+            return ResponseError(e.getMessage());
         }
     }
 

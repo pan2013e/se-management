@@ -26,7 +26,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User getUserByName(String name) throws UserNotFoundException{
+    public User getUserByName(String name) throws UserNotFoundException {
         List<User> list = userRepository.findByUserName(name);
         if(list.isEmpty()) {
             return null;

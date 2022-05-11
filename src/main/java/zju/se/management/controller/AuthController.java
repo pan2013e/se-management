@@ -2,7 +2,7 @@ package zju.se.management.controller;
 
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +17,8 @@ import zju.se.management.utils.TokenResponseData;
 @RequestMapping("/api/oauth")
 @CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
-public class AuthController {
+@Api(protocols = "http", consumes = "application/json", produces = "application/json", tags = "认证接口")
+public class AuthController extends BaseController {
     private final UserService userService;
 
     @Autowired
@@ -26,23 +27,25 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Response login(@RequestParam(value = "userName") String userName,
+    @ApiOperation(value = "用户登录", notes = "前端登陆界面使用")
+    public Response<TokenResponseData> login(@RequestParam(value = "userName") String userName,
                           @RequestParam(value = "password") String password) {
         try{
             boolean validationResult = CryptoUtil.validate(password, userService.getPasswordByName(userName));
             if (validationResult) {
                 String token = TokenUtil.getToken(userService.getUserByName(userName));
-                return new Response(0, new TokenResponseData(userName, token), "登录成功");
+                return ResponseOK(new TokenResponseData(userName, token), "登录成功");
             } else {
-                return new Response(-1, null, "密码错误");
+                return ResponseError("密码错误");
             }
         } catch (Exception e) {
-            return new Response(-1, null, e.getMessage());
+            return ResponseError(e.getMessage());
         }
     }
 
     @PostMapping("/register")
-    public Response register(@RequestParam(value = "userName") String userName,
+    @ApiOperation(value = "用户注册", notes = "前端注册界面使用，仅支持病人用户注册")
+    public Response<?> register(@RequestParam(value = "userName") String userName,
                              @RequestParam(value = "password") String password) {
         try{
             userService.getUserByName(userName);
@@ -51,29 +54,28 @@ public class AuthController {
             user.setPassword(CryptoUtil.encrypt(password));
             user.setRole(User.userType.PATIENT);
             userService.addUser(user);
-            return new Response(0, null, "注册成功");
+            return ResponseOK("注册成功");
         } catch (Exception e) {
-            return new Response(-1, null, e.getMessage());
+            return ResponseError(e.getMessage());
         }
     }
 
     @PostMapping("/verify")
-    @ApiOperation(value = "验证token是否有效")
-    public Response verify(@RequestParam(value = "userName") String userName,
+    @ApiOperation(value = "鉴权", notes = "供其他系统验证token是否有效")
+    public Response<AccessControlResponseData> verify(@RequestParam(value = "userName") String userName,
                            @RequestParam(value = "token") String token) {
 
         try {
             DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
             if (!decodedJWT.getClaim("userName").asString().equals(userName)) {
-                return new Response(-1, null, "用户名不匹配");
+                return ResponseError("用户名不匹配");
             }
             User user = userService.getUserByName(userName);
-            return new Response(0, new AccessControlResponseData(userName, user.getRole().toString()),
-                    "验证成功");
+            return ResponseOK(new AccessControlResponseData(userName, user.getRole().toString()), "验证成功");
         } catch (TokenExpiredException e) {
-            return new Response(-1, null, "token过期");
+            return ResponseError("token过期");
         } catch (Exception e) {
-            return new Response(-1, null, "非法token");
+            return ResponseError("非法token");
         }
     }
 

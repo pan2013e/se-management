@@ -11,7 +11,7 @@ import java.util.Calendar;
 
 public class TokenUtil {
 
-    private static final String secret = "secret";
+    private static final String secret = "CA706F69-6E57-A237-7CD8-CCC6BD1C8B6B";
     private static final int expireDate = 1;
 
     public static String getToken(User user) {
