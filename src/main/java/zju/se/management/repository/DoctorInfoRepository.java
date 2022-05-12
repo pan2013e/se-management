@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface DoctorInfoRepository extends JpaRepository<DoctorInfo, Integer> {
-
+    void deleteById(int id);
+    boolean existsById(int id);
 
 }

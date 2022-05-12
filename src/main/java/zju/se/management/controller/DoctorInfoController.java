@@ -28,12 +28,20 @@ public class DoctorInfoController extends BaseController {
 
     @PostMapping("/doctorInfo")
     public Response<?> addDoctorInfo(
+            @RequestParam(value = "id") int id,
             @RequestParam(value = "department") String department,
             @RequestParam(value = "hospital") String hospital){
         DoctorInfo doctorInfo = new DoctorInfo();
+        doctorInfo.setId(id);
         doctorInfo.setDepartment(department);
         doctorInfo.setHospital(hospital);
-        doctorInfoService.addDoctorInfo(doctorInfo);
+        try {
+            doctorInfoService.addDoctorInfo(doctorInfo);
+        }
+        catch (DoctorInfoAlreadyExistsException e){
+            System.out.println("whoops");
+        }
+
         return ResponseOK("添加成功");
     }
 
