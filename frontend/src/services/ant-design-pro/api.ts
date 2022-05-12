@@ -23,9 +23,6 @@ export async function outLogin(options?: { [key: string]: any }) {
 export async function login(body: { [key: string]: any }, options?: { [key: string]: any }) {
     return request<API.BackendResult>('http://localhost:3000/api/oauth/login', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
         params: body,
         ...(options || {}),
     });
@@ -35,7 +32,7 @@ export async function patientRegister(
     body: { [key: string]: any },
     options?: { [key: string]: any },
 ) {
-    return request<API.BackendResult>('http://localhost:3000/api/user', {
+    return request<API.BackendResult>('http://localhost:3000/api/oauth/register', {
         method: 'POST',
         params: body,
         ...(options || {}),
