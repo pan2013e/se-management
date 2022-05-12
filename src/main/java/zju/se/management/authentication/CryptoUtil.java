@@ -1,5 +1,6 @@
 package zju.se.management.authentication;
 
+import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.util.DigestUtils;
 
@@ -10,11 +11,11 @@ public class CryptoUtil {
 
     private static final Charset charset = StandardCharsets.UTF_8;
 
-    private static String hash(String plaintext) {
+    private static @NotNull String hash(@NotNull String plaintext) {
         return DigestUtils.md5DigestAsHex(plaintext.getBytes(charset));
     }
 
-    public static String encrypt(String plaintext) {
+    public static @NotNull String encrypt(String plaintext) {
         return BCrypt.hashpw(hash(plaintext), BCrypt.gensalt());
     }
 
