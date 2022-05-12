@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import zju.se.management.authentication.CryptoUtil;
 import zju.se.management.entity.User;
 import zju.se.management.service.UserService;
-import zju.se.management.utils.Response;
-import zju.se.management.utils.UserListResponseData;
-import zju.se.management.utils.UserNotFoundException;
-import zju.se.management.utils.UserResponseData;
+import zju.se.management.utils.*;
 
 @RestController
 @RequestMapping("/api")
@@ -31,7 +28,7 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/user/id/{id}")
-    public Response<UserResponseData> getUserById(@PathVariable("id") Integer id) {
+    public Response<UserResponseData> getUserById(@PathVariable("id") Integer id) throws UserNotFoundException {
         User user = userService.getUserById(id);
         return ResponseOK(new UserResponseData(user), "查询成功");
     }
@@ -52,7 +49,7 @@ public class UserController extends BaseController {
     public Response<?> addUser(
             @RequestParam(value = "userName") String userName,
             @RequestParam(value = "password") String password,
-            @RequestParam(value = "role") String role) {
+            @RequestParam(value = "role") String role) throws UserAlreadyExistsException {
         User user = new User();
         user.setUserName(userName);
         user.setPassword(CryptoUtil.encrypt(password));
