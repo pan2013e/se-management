@@ -1,8 +1,10 @@
 package zju.se.management.controller;
 
+import org.springframework.web.bind.annotation.RestController;
 import zju.se.management.utils.Response;
 import zju.se.management.utils.ResponseData;
 
+@RestController
 public class BaseController {
     public <T extends ResponseData> Response<T> ResponseOK(T data, String message) {
         return new Response<>(Response.OK, data, message);

@@ -1,6 +1,5 @@
 package zju.se.management.controller;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,53 +30,36 @@ public class AuthController extends BaseController {
     @ApiOperation(value = "用户登录", notes = "前端登陆界面使用")
     public Response<TokenResponseData> login(@RequestParam(value = "userName") String userName,
                                              @RequestParam(value = "password") String password) {
-        try{
-            boolean validationResult = CryptoUtil.validate(password, userService.getPasswordByName(userName));
-            if (validationResult) {
-                String token = TokenUtil.getToken(userService.getUserByName(userName));
-                return ResponseOK(new TokenResponseData(userName, token), "登录成功");
-            } else {
-                return ResponseError("密码错误");
-            }
-        } catch (Exception e) {
-            return ResponseError(e.getMessage());
+        boolean validationResult = CryptoUtil.validate(password, userService.getPasswordByName(userName));
+        if (!validationResult) {
+            throw new IllegalArgumentException("密码错误");
         }
+        String token = TokenUtil.getToken(userService.getUserByName(userName));
+        return ResponseOK(new TokenResponseData(userName, token), "登录成功");
     }
 
     @PostMapping("/register")
     @ApiOperation(value = "用户注册", notes = "前端注册界面使用，仅支持病人用户注册")
     public Response<?> register(@RequestParam(value = "userName") String userName,
                              @RequestParam(value = "password") String password) {
-        try{
-            userService.getUserByName(userName);
-            User user = new User();
-            user.setUserName(userName);
-            user.setPassword(CryptoUtil.encrypt(password));
-            user.setRole(User.userType.PATIENT);
-            userService.addUser(user);
-            return ResponseOK("注册成功");
-        } catch (Exception e) {
-            return ResponseError(e.getMessage());
-        }
+        User user = new User();
+        user.setUserName(userName);
+        user.setPassword(CryptoUtil.encrypt(password));
+        user.setRole(User.userType.PATIENT);
+        userService.addUser(user);
+        return ResponseOK("注册成功");
     }
 
     @PostMapping("/verify")
     @ApiOperation(value = "鉴权", notes = "供其他系统验证token是否有效")
     public Response<AccessControlResponseData> verify(@RequestParam(value = "userName") String userName,
                            @RequestParam(value = "token") String token) {
-
-        try {
-            DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
-            if (!decodedJWT.getClaim("userName").asString().equals(userName)) {
-                return ResponseError("用户名不匹配");
-            }
-            User user = userService.getUserByName(userName);
-            return ResponseOK(new AccessControlResponseData(userName, user.getRole().toString()), "验证成功");
-        } catch (TokenExpiredException e) {
-            return ResponseError("token过期");
-        } catch (Exception e) {
-            return ResponseError("非法token");
+        DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
+        if (!decodedJWT.getClaim("userName").asString().equals(userName)) {
+            throw new IllegalArgumentException("用户名不匹配");
         }
+        User user = userService.getUserByName(userName);
+        return ResponseOK(new AccessControlResponseData(userName, user.getRole().toString()), "验证成功");
     }
 
 }
