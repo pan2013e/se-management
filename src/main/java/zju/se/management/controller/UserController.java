@@ -12,7 +12,7 @@ import zju.se.management.utils.UserNotFoundException;
 import zju.se.management.utils.UserResponseData;
 
 @RestController
-@RequestMapping("/api/privileged")
+@RequestMapping("/api")
 @CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
 public class UserController extends BaseController {
@@ -42,6 +42,12 @@ public class UserController extends BaseController {
         return ResponseOK(new UserResponseData(user), "查询成功");
     }
 
+    @GetMapping("/user/role/{role}")
+    public Response<UserListResponseData> getUserByRole(@PathVariable("role") String role) {
+        return ResponseOK(new UserListResponseData(userService.getUserByRole(User.userType.valueOf(role.toUpperCase()))),
+                "查询成功");
+    }
+
     @PostMapping("/user")
     public Response<?> addUser(
             @RequestParam(value = "userName") String userName,
@@ -50,7 +56,7 @@ public class UserController extends BaseController {
         User user = new User();
         user.setUserName(userName);
         user.setPassword(CryptoUtil.encrypt(password));
-        user.setRole(User.userType.valueOf(role));
+        user.setRole(User.userType.valueOf(role.toUpperCase()));
         userService.addUser(user);
         return ResponseOK("添加成功");
     }

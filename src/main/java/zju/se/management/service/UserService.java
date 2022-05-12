@@ -33,6 +33,10 @@ public class UserService {
         return userRepository.findDistinctByUserName(name).orElseThrow(UserNotFoundException::new);
     }
 
+    public List<User> getUserByRole(User.userType role) {
+        return userRepository.findByRole(role);
+    }
+
     public void deleteUserById(int id) throws UserNotFoundException {
         if(!isExist(id)) {
             throw new UserNotFoundException();
