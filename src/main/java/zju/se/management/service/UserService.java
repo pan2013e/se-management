@@ -20,7 +20,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    @Deprecated
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }

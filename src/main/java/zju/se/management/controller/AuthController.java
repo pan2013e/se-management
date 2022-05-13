@@ -11,6 +11,8 @@ import zju.se.management.entity.User;
 import zju.se.management.service.UserService;
 import zju.se.management.utils.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/oauth")
 @CrossOrigin(origins = "*")
@@ -26,20 +28,24 @@ public class AuthController extends BaseController {
 
     @PostMapping("/login")
     @ApiOperation(value = "用户登录", notes = "前端登陆界面使用")
-    public Response<TokenResponseData> login(@RequestParam(value = "userName") String userName,
-                                             @RequestParam(value = "password") String password) throws UserNotFoundException, AuthErrorException {
+    public Response<TokenResponseData> login(
+            HttpServletRequest req,
+            @RequestParam(value = "userName") String userName,
+            @RequestParam(value = "password") String password) throws BaseException {
         boolean validationResult = CryptoUtil.validate(password, userService.getPasswordByName(userName));
         if (!validationResult) {
             throw new AuthErrorException("密码错误");
         }
         String token = TokenUtil.getToken(userService.getUserByName(userName));
+        req.getSession().setAttribute("token", token);
         return ResponseOK(new TokenResponseData(userName, token), "登录成功");
     }
 
     @PostMapping("/register")
     @ApiOperation(value = "用户注册", notes = "前端注册界面使用，仅支持病人用户注册")
-    public Response<?> register(@RequestParam(value = "userName") String userName,
-                             @RequestParam(value = "password") String password) throws UserAlreadyExistsException {
+    public Response<?> register(
+            @RequestParam(value = "userName") String userName,
+            @RequestParam(value = "password") String password) throws UserAlreadyExistsException {
         User user = new User();
         user.setUserName(userName);
         user.setPassword(CryptoUtil.encrypt(password));
@@ -50,14 +56,27 @@ public class AuthController extends BaseController {
 
     @PostMapping("/verify")
     @ApiOperation(value = "鉴权", notes = "供其他系统验证token是否有效")
-    public Response<AccessControlResponseData> verify(@RequestParam(value = "userName") String userName,
-                           @RequestParam(value = "token") String token) throws UserNotFoundException, AuthErrorException {
+    public Response<AccessControlResponseData> verify(
+            @RequestParam(value = "userName") String userName,
+            @RequestParam(value = "token") String token) throws UserNotFoundException, AuthErrorException {
         DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
         if (!decodedJWT.getClaim("userName").asString().equals(userName)) {
             throw new AuthErrorException("用户名不匹配");
         }
         User user = userService.getUserByName(userName);
         return ResponseOK(new AccessControlResponseData(userName, user.getRole().toString()), "验证成功");
+    }
+
+    @GetMapping("/logout")
+    @ApiOperation(value = "用户登出", notes = "用户登出")
+    public Response<?> logout(HttpServletRequest req) {
+        if(req.isRequestedSessionIdValid()){
+            req.getSession().invalidate();
+            return ResponseOK("登出成功");
+        } else{
+            return ResponseError("已经登出");
+        }
+
     }
 
 }

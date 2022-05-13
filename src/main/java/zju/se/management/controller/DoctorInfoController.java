@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import zju.se.management.entity.DoctorInfo;
+import zju.se.management.entity.User;
 import zju.se.management.service.DoctorInfoService;
+import zju.se.management.service.UserService;
 import zju.se.management.utils.*;
 
 @RestController
@@ -14,34 +16,51 @@ import zju.se.management.utils.*;
 public class DoctorInfoController extends BaseController {
 
     private final DoctorInfoService doctorInfoService;
+    private final UserService userService;
 
     @Autowired
-    public DoctorInfoController(DoctorInfoService doctorInfoService) {
+    public DoctorInfoController(DoctorInfoService doctorInfoService, UserService userService) {
         this.doctorInfoService = doctorInfoService;
+        this.userService = userService;
     }
 
-    @GetMapping("/doctorInfo")
-    @Deprecated
+    @GetMapping("/doctor/all")
     public Response<DoctorInfoListResponseData> getDoctorInfo() {
-        return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getAllDoctorInfos()), "查询成功");
+        return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getAllDoctorInfos()),
+                "查询成功");
     }
 
-    @PostMapping("/doctorInfo")
+    @GetMapping("/doctor/dept/{dept}")
+    public Response<DoctorInfoListResponseData> getDoctorInfoByDept(@PathVariable("dept") String dept) {
+        return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getDoctorInfoByDepartment(dept)),
+                "查询成功");
+    }
+
+    @GetMapping("/doctor/hospital/{hospital}")
+    public Response<DoctorInfoListResponseData> getDoctorInfoByHospital(@PathVariable("hospital") String hospital) {
+        return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getDoctorInfoByHospital(hospital)),
+                "查询成功");
+    }
+
+    @GetMapping("/doctor")
+    public Response<DoctorInfoListResponseData> getDoctorInfoByHospitalAndDept(
+            @RequestParam("hospital") String hospital,
+            @RequestParam("department") String department) {
+        return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getDoctorInfoByHospitalAndDepartment(hospital, department)),
+                "查询成功");
+    }
+
+    @PostMapping("/doctor")
     public Response<?> addDoctorInfo(
-            @RequestParam(value = "id") int id,
+            @RequestParam(value = "userId") int userId,
             @RequestParam(value = "department") String department,
-            @RequestParam(value = "hospital") String hospital){
+            @RequestParam(value = "hospital") String hospital) throws BaseException {
         DoctorInfo doctorInfo = new DoctorInfo();
-        doctorInfo.setId(id);
+        User user = userService.getUserById(userId);
+        doctorInfo.setUser(user);
         doctorInfo.setDepartment(department);
         doctorInfo.setHospital(hospital);
-        try {
-            doctorInfoService.addDoctorInfo(doctorInfo);
-        }
-        catch (DoctorInfoAlreadyExistsException e){
-            System.out.println("whoops");
-        }
-
+        doctorInfoService.addDoctorInfo(doctorInfo);
         return ResponseOK("添加成功");
     }
 

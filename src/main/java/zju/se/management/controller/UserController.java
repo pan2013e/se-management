@@ -22,7 +22,6 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/user")
-    @Deprecated
     public Response<UserListResponseData> getUser() {
         return ResponseOK(new UserListResponseData(userService.getAllUsers()), "查询成功");
     }
@@ -48,10 +47,12 @@ public class UserController extends BaseController {
     @PostMapping("/user")
     public Response<?> addUser(
             @RequestParam(value = "userName") String userName,
+            @RequestParam(value = "realName") String realName,
             @RequestParam(value = "password") String password,
             @RequestParam(value = "role") String role) throws UserAlreadyExistsException {
         User user = new User();
         user.setUserName(userName);
+        user.setRealName(realName);
         user.setPassword(CryptoUtil.encrypt(password));
         user.setRole(User.userType.valueOf(role.toUpperCase()));
         userService.addUser(user);

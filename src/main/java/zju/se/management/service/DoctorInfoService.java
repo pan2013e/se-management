@@ -19,13 +19,27 @@ public class DoctorInfoService {
     public DoctorInfoService(DoctorInfoRepository doctorInfoRepository) {
         this.doctorInfoRepository = doctorInfoRepository;
     }
-    @Deprecated
+
     public List<DoctorInfo> getAllDoctorInfos() {
         return doctorInfoRepository.findAll();
     }
+
     public DoctorInfo getDoctorInfoById(int id) throws DoctorInfoNotFoundException {
         return doctorInfoRepository.findById(id).orElseThrow(DoctorInfoNotFoundException::new);
     }
+
+    public List<DoctorInfo> getDoctorInfoByDepartment(String department) {
+        return doctorInfoRepository.findByDepartment(department);
+    }
+
+    public List<DoctorInfo> getDoctorInfoByHospital(String hospital) {
+        return doctorInfoRepository.findByHospital(hospital);
+    }
+
+    public List<DoctorInfo> getDoctorInfoByHospitalAndDepartment(String hospital, String department) {
+        return doctorInfoRepository.findByHospitalAndDepartment(hospital, department);
+    }
+
     public void deleteDoctorInfoById(int id) throws DoctorInfoNotFoundException {
         if(!isExist(id)) {
             throw new DoctorInfoNotFoundException();
@@ -33,7 +47,7 @@ public class DoctorInfoService {
         doctorInfoRepository.deleteById(id);
     }
 
-    public void addDoctorInfo(@NotNull DoctorInfo doctorInfo)throws DoctorInfoAlreadyExistsException{
+    public void addDoctorInfo(@NotNull DoctorInfo doctorInfo) throws DoctorInfoAlreadyExistsException{
         if(isExist(doctorInfo.getId())) {
             throw new DoctorInfoAlreadyExistsException();
         }

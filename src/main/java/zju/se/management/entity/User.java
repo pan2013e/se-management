@@ -27,7 +27,7 @@ public class User {
     private String userName;
 
     @Column
-    private String RealName;
+    private String realName;
 
     @Column
     private String password;
