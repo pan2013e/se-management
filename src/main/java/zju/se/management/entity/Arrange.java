@@ -24,7 +24,6 @@ public class Arrange {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Temporal(TemporalType.TIME)
@@ -32,6 +31,7 @@ public class Arrange {
 
     @Temporal(TemporalType.TIME)
     private Date end_time;
+
 
     @Column
     @Enumerated(EnumType.STRING)
