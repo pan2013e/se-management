@@ -32,8 +32,14 @@ export async function getInitialState(): Promise<{
                 userName: localStorage.getItem('userName'),
                 token: localStorage.getItem('token'),
             });
-            return msg.data;
+            if(msg.code < 0){
+                localStorage.clear();
+                history.push(loginPath);
+            } else {
+                return msg.data;
+            }
         } catch (error) {
+            localStorage.clear();
             history.push(loginPath);
         }
         return undefined;
@@ -64,19 +70,12 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         footerRender: () => <Footer />,
         onPageChange: () => {
             const { location } = history;
-            if (
-                (!initialState?.currentUser && location.pathname !== loginPath) ||
-                initialState?.currentUser?.role != 'ADMIN'
-            ) {
+            if (!initialState?.currentUser && location.pathname !== loginPath) {
                 history.push(loginPath);
             }
         },
         links: isDev
             ? [
-                  // <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-                  //     <LinkOutlined />
-                  //     <span>OpenAPI 文档</span>
-                  // </Link>,
                   <Link to="/~docs" key="docs">
                       <BookOutlined />
                       <span>业务组件文档</span>

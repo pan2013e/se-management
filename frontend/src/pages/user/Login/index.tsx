@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { ProFormText, LoginForm } from '@ant-design/pro-form';
 import { history } from 'umi';
 import Footer from '@/components/Footer';
-import { login, patientRegister } from '@/services/ant-design-pro/api';
+import {login, logout, patientRegister} from '@/services/ant-design-pro/api';
 
 import styles from './index.less';
 
@@ -16,6 +16,7 @@ const Login: React.FC = () => {
     const handleSubmit = async (values: Record<string, any>) => {
         if (isLogin && type === 'login') {
             localStorage.clear();
+            await logout();
             history.push('/');
             return;
         }
@@ -24,7 +25,6 @@ const Login: React.FC = () => {
                 const msg = await patientRegister({
                     userName: values.regUserName,
                     password: values.regPassword,
-                    authorization: localStorage.getItem('token'),
                 });
                 if (msg.code === 0) {
                     message.success('注册成功');
@@ -41,15 +41,7 @@ const Login: React.FC = () => {
                     message.success('登录成功');
                     localStorage.setItem('userName', msg.data.userName);
                     localStorage.setItem('token', msg.data.token);
-                    if (!history) return;
-                    const { query } = history.location;
-                    const { redirect } = query as { redirect: string };
-                    console.log(redirect);
-                    if (redirect) {
-                        history.push('/welcome');
-                    } else {
-                        window.location.href = decodeURIComponent(redirect);
-                    }
+                    history.push('/welcome');
                 } else {
                     message.error(msg.message);
                 }

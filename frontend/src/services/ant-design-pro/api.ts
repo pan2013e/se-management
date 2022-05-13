@@ -12,9 +12,9 @@ export async function currentUser(body: { [key: string]: any }, options?: { [key
 }
 
 /** 退出登录接口 POST /api/login/outLogin */
-export async function outLogin(options?: { [key: string]: any }) {
-    return request<Record<string, any>>('/api/login/outLogin', {
-        method: 'POST',
+export async function logout(options?: { [key: string]: any }) {
+    return request<Record<string, any>>('http://localhost:3000/api/oauth/logout', {
+        method: 'GET',
         ...(options || {}),
     });
 }
