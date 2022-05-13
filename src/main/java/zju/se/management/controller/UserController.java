@@ -11,16 +11,11 @@ import zju.se.management.entity.Arrange;
 import zju.se.management.service.UserService;
 import zju.se.management.service.ArrangeService;
 import zju.se.management.utils.*;
-<<<<<<< Updated upstream
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
-=======
-import zju.se.management.service.ArrangeService;
-import java.util.Random;
->>>>>>> Stashed changes
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
@@ -67,11 +62,7 @@ public class UserController extends BaseController {
         return rtn;
     }
 
-<<<<<<< Updated upstream
-    private static Date randomDate(String beginDate, String endDate){
-=======
-    private static Date randomDate(String beginDate,String endDate){
->>>>>>> Stashed changes
+    private static Date randomDate(String beginDate,String endDate) {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm");
             Date start = format.parse(beginDate);
@@ -100,7 +91,7 @@ public class UserController extends BaseController {
         user.setPassword(CryptoUtil.encrypt(password));
         user.setRole(User.userType.valueOf(role.toUpperCase()));
         userService.addUser(user);
-        if(User.userType.valueOf(role.toUpperCase())==User.userType.DOCTOR){
+        if (User.userType.valueOf(role.toUpperCase()) == User.userType.DOCTOR) {
             String[] weekDays = {
                     "SUNDAY",
                     "MONDAY",
@@ -109,11 +100,11 @@ public class UserController extends BaseController {
                     "THURSDAY",
                     "FRIDAY",
                     "SATURDAY"};
-            Random random=new Random();
-            for(int i=0;i<7;i++){
-                if(random.nextBoolean()){
-                    Date start_time = randomDate("1970.01.01 8:30","1970.01.01 10:30");
-                    Date end_time = randomDate("1970.01.01 14:30","1970.01.01 16:30");
+            Random random = new Random();
+            for (int i = 0; i < 7; i++) {
+                if (random.nextBoolean()) {
+                    Date start_time = randomDate("1970.01.01 8:30", "1970.01.01 10:30");
+                    Date end_time = randomDate("1970.01.01 14:30", "1970.01.01 16:30");
                     Arrange arrange = new Arrange();
                     arrange.setId(user.getId());
                     arrange.setStart_time(start_time);
@@ -121,12 +112,7 @@ public class UserController extends BaseController {
                     arrange.setDayType(Arrange.dayEnum.valueOf(weekDays[i]));
                     arrangeService.addArrange(arrange);
                 }
-
             }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
         }
         return ResponseOK("添加成功");
     }
