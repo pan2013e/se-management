@@ -5,7 +5,7 @@ import { request } from 'umi';
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(body: { [key: string]: any }, options?: { [key: string]: any }) {
     return request<API.BackendResult>('http://localhost:3000/api/oauth/verify', {
-        method: 'POST',
+        method: 'GET',
         params: body,
         ...(options || {}),
     });
@@ -13,7 +13,15 @@ export async function currentUser(body: { [key: string]: any }, options?: { [key
 
 /** 退出登录接口 POST /api/login/outLogin */
 export async function logout(options?: { [key: string]: any }) {
+    localStorage.clear();
     return request<Record<string, any>>('http://localhost:3000/api/oauth/logout', {
+        method: 'GET',
+        ...(options || {}),
+    });
+}
+
+export async function getCaptcha(options?: { [key: string]: any }) {
+    return request<API.BackendResult>('http://localhost:3000/api/oauth/captcha', {
         method: 'GET',
         ...(options || {}),
     });
