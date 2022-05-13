@@ -26,17 +26,5 @@ public class ArrangeController extends BaseController {
         return ResponseOK(new ArrangeListResponseData(arrangeService.getAllArranges()), "查询成功");
     }
 
-//    @PostMapping("/arrange")
-//    public Response<?> addArrange(
-//            @RequestParam(value = "userName") String userName,
-//            @RequestParam(value = "password") String password,
-//            @RequestParam(value = "role") String role){
-//        Arrange arrange = new Arrange();
-//        arrange.setUserName(userName);
-//        arrange.setPassword(CryptoUtil.encrypt(password));
-//        arrange.setRole(User.userType.valueOf(role.toUpperCase()));
-//        arrangeService.addArrange(user);
-//        return ResponseOK("添加成功");
-//    }
 
 }

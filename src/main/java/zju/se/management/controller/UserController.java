@@ -1,19 +1,26 @@
 package zju.se.management.controller;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import zju.se.management.authentication.CryptoUtil;
+import zju.se.management.entity.Arrange;
 import zju.se.management.entity.User;
 import zju.se.management.entity.Arrange;
 import zju.se.management.service.UserService;
 import zju.se.management.service.ArrangeService;
 import zju.se.management.utils.*;
+<<<<<<< Updated upstream
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
+=======
+import zju.se.management.service.ArrangeService;
+import java.util.Random;
+>>>>>>> Stashed changes
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
@@ -60,7 +67,11 @@ public class UserController extends BaseController {
         return rtn;
     }
 
+<<<<<<< Updated upstream
     private static Date randomDate(String beginDate, String endDate){
+=======
+    private static Date randomDate(String beginDate,String endDate){
+>>>>>>> Stashed changes
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm");
             Date start = format.parse(beginDate);
@@ -112,7 +123,10 @@ public class UserController extends BaseController {
                 }
 
             }
+<<<<<<< Updated upstream
+=======
 
+>>>>>>> Stashed changes
         }
         return ResponseOK("添加成功");
     }
