@@ -14,6 +14,7 @@ public class DoctorInfo {
 
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -22,6 +23,7 @@ public class DoctorInfo {
     @Column
     private String hospital;
 
-    public void setId(int id) { this.id = id; }
-
+    @OneToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    private User user;
 }

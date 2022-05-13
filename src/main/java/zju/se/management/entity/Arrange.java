@@ -37,5 +37,8 @@ public class Arrange {
     @Enumerated(EnumType.STRING)
     private dayEnum dayType;
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    private User user;
 
 }
