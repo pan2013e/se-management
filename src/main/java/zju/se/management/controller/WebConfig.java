@@ -11,6 +11,10 @@ public class WebConfig implements WebMvcConfigurer {
     private final PermissionInterceptor permissionInterceptor;
 
     private final String[] staticResources = {
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/v2/api-docs",
             "/**/*.js",
             "/**/*.css",
             "/**/*.png",
