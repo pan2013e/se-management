@@ -4,8 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import zju.se.management.entity.Arrange;
+import zju.se.management.entity.DoctorInfo;
 import zju.se.management.repository.ArrangeRepository;
+import zju.se.management.repository.DoctorInfoRepository;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -14,10 +17,12 @@ import java.util.List;
 public class ArrangeService {
 
     private final ArrangeRepository arrangeRepository;
+    private final DoctorInfoRepository doctorInfoRepository;
 
     @Autowired
-    public ArrangeService(ArrangeRepository arrangeRepository) {
+    public ArrangeService(ArrangeRepository arrangeRepository,DoctorInfoRepository doctorInfoRepository) {
         this.arrangeRepository = arrangeRepository;
+        this.doctorInfoRepository=doctorInfoRepository;
     }
     @Deprecated
     public List<Arrange> getAllArranges() {
@@ -42,4 +47,15 @@ public class ArrangeService {
         arrangeRepository.save(arrange);
     }
 
+    public List<Arrange> getAllDepartmentArranges(String department){
+        List<Arrange> list = new ArrayList<>();
+        List<Arrange> arranges=getAllArranges();
+        for(Arrange arrange:arranges){
+            DoctorInfo doctorInfo=doctorInfoRepository.findByUserId(arrange.getUser().getId()).get(0);
+            if(doctorInfo.getDepartment().equals(department)){
+                list.add(arrange);
+            }
+        }
+        return list;
+    }
 }

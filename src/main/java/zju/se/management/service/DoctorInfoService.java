@@ -24,8 +24,11 @@ public class DoctorInfoService {
         return doctorInfoRepository.findAll();
     }
 
-    public DoctorInfo getDoctorInfoById(int id) throws DoctorInfoNotFoundException {
-        return doctorInfoRepository.findById(id).orElseThrow(DoctorInfoNotFoundException::new);
+    public List<DoctorInfo> getDoctorInfoById(int id) throws DoctorInfoNotFoundException {
+        return doctorInfoRepository.findById(id);
+    }
+    public List<DoctorInfo> getDoctorInfoByUserId(int userId) throws DoctorInfoNotFoundException {
+        return doctorInfoRepository.findByUserId(userId);
     }
 
     public List<DoctorInfo> getDoctorInfoByDepartment(String department) {

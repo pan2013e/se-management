@@ -54,30 +54,6 @@ public class UserController extends BaseController {
                 "查询成功");
     }
 
-    private static long random(long begin,long end){
-        long rtn = begin + (long)(Math.random() * (end - begin));
-        if(rtn == begin || rtn == end){
-            return random(begin,end);
-        }
-        return rtn;
-    }
-
-    private static Date randomDate(String beginDate,String endDate) {
-        try {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm");
-            Date start = format.parse(beginDate);
-            Date end = format.parse(endDate);
-
-            if(start.getTime() >= end.getTime()){
-                return null;
-            }
-            long date = random(start.getTime(),end.getTime());
-            return new Date(date);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @PostMapping("/user")
     public Response<?> addUser(
@@ -91,29 +67,6 @@ public class UserController extends BaseController {
         user.setPassword(CryptoUtil.encrypt(password));
         user.setRole(User.userType.valueOf(role.toUpperCase()));
         userService.addUser(user);
-        if (User.userType.valueOf(role.toUpperCase()) == User.userType.DOCTOR) {
-            String[] weekDays = {
-                    "SUNDAY",
-                    "MONDAY",
-                    "TUESDAY",
-                    "WEDNESDAY",
-                    "THURSDAY",
-                    "FRIDAY",
-                    "SATURDAY"};
-            Random random = new Random();
-            for (int i = 0; i < 7; i++) {
-                if (random.nextBoolean()) {
-                    Date start_time = randomDate("1970.01.01 8:30", "1970.01.01 10:30");
-                    Date end_time = randomDate("1970.01.01 14:30", "1970.01.01 16:30");
-                    Arrange arrange = new Arrange();
-                    arrange.setId(user.getId());
-                    arrange.setStart_time(start_time);
-                    arrange.setEnd_time(end_time);
-                    arrange.setDayType(Arrange.dayEnum.valueOf(weekDays[i]));
-                    arrangeService.addArrange(arrange);
-                }
-            }
-        }
         return ResponseOK("添加成功");
     }
 
