@@ -1,10 +1,11 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { message, Tabs, Result } from 'antd';
-import React, { useState } from 'react';
-import { ProFormText, LoginForm } from '@ant-design/pro-form';
+import {LockOutlined, UserOutlined, SafetyCertificateOutlined} from '@ant-design/icons';
+import {message, Tabs, Result, Form, Image, Input} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {ProFormText, LoginForm, ProFormCaptcha} from '@ant-design/pro-form';
 import { history } from 'umi';
 import Footer from '@/components/Footer';
-import {login, logout, patientRegister} from '@/services/ant-design-pro/api';
+import CaptchaInput from "@/components/CaptchaInput";
+import {login, logout, patientRegister, getCaptcha} from '@/services/ant-design-pro/api';
 
 import styles from './index.less';
 
@@ -12,12 +13,43 @@ const Login: React.FC = () => {
     const isLogin =
         localStorage.getItem('userName') != null && localStorage.getItem('userName') != undefined;
     const [type, setType] = useState<string>('login');
+    const [captchaKey, setCaptchaKey] = useState<string>('');
+    const [captchaImage, setCaptchaImage] = useState<string>('');
+    const [captchaCode, setCaptchaCode] = useState<string>('');
+
+    useEffect(()=>{
+        getCaptcha().then(res => {
+            setCaptchaKey(res.data.key);
+            setCaptchaImage(res.data.image);
+        });
+    },[type, setType]);
+
+    const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const code = e.target.value || '';
+        if (code.length > 0) {
+            setCaptchaCode(code);
+        }
+    }
+
+    const onClickImage = async () => {
+        let res = await getCaptcha();
+        if(res.code < 0) {
+            message.error('验证码获取失败');
+        } else {
+            setCaptchaKey(res.data.key);
+            setCaptchaImage(res.data.image);
+        }
+    }
+
 
     const handleSubmit = async (values: Record<string, any>) => {
         if (isLogin && type === 'login') {
-            localStorage.clear();
             await logout();
             history.push('/');
+            return;
+        }
+        if(captchaCode.length === 0){
+            message.error('请输入验证码');
             return;
         }
         try {
@@ -25,7 +57,11 @@ const Login: React.FC = () => {
                 const msg = await patientRegister({
                     userName: values.regUserName,
                     password: values.regPassword,
+                    realName: values.regRealName,
+                    captchaKey: captchaKey,
+                    captchaCode: captchaCode
                 });
+
                 if (msg.code === 0) {
                     message.success('注册成功');
                     history.push('/');
@@ -36,6 +72,8 @@ const Login: React.FC = () => {
                 const msg = await login({
                     userName: values.userName,
                     password: values.password,
+                    captchaKey: captchaKey,
+                    captchaCode: captchaCode
                 });
                 if (msg.code === 0) {
                     message.success('登录成功');
@@ -49,6 +87,7 @@ const Login: React.FC = () => {
         } catch (error) {
             message.error('网络错误');
         }
+        await onClickImage();
     };
 
     return (
@@ -99,6 +138,7 @@ const Login: React.FC = () => {
                                 fieldProps={{
                                     size: 'large',
                                     prefix: <LockOutlined className={styles.prefixIcon} />,
+
                                 }}
                                 placeholder="密码"
                                 rules={[
@@ -108,6 +148,25 @@ const Login: React.FC = () => {
                                     },
                                 ]}
                             />
+                            <div role="row" className="ant-row ant-form-item">
+                            <span style={{marginBottom: 5}}>
+                                <Input.Group compact>
+                                    <Input
+                                        size='large'
+                                        prefix={<SafetyCertificateOutlined/>}
+                                        placeholder="请输入验证码"
+                                        onChange={onChangeInput}
+                                        style={{width: '60%', marginRight: 10, padding: '6.5px 11px 6.5px 11px', verticalAlign: 'middle'}}
+                                    />
+                                    <img
+                                        alt="验证码"
+                                        style={{width: '30%', height: '35px', verticalAlign: 'middle', padding: '0px 0px 0px 0px'}}
+                                        src={captchaImage}
+                                        onClick={onClickImage}
+                                    />
+                                </Input.Group>
+                            </span>
+                            </div>
                         </>
                     )}
 
@@ -119,7 +178,7 @@ const Login: React.FC = () => {
 
                     {type === 'register' && (
                         <>
-                            <p>目前仅支持病人用户的自助注册</p>
+                            <p>仅支持病人用户自助注册</p>
                             <ProFormText
                                 name="regUserName"
                                 fieldProps={{
@@ -131,6 +190,20 @@ const Login: React.FC = () => {
                                     {
                                         required: true,
                                         message: '请输入用户名',
+                                    },
+                                ]}
+                            />
+                            <ProFormText
+                                name="regRealName"
+                                fieldProps={{
+                                    size: 'large',
+                                    prefix: <UserOutlined className={styles.prefixIcon} />,
+                                }}
+                                placeholder="真实姓名"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: '请输入姓名',
                                     },
                                 ]}
                             />
@@ -174,6 +247,25 @@ const Login: React.FC = () => {
                                     }),
                                 ]}
                             />
+                            <div role="row" className="ant-row ant-form-item">
+                            <span style={{marginBottom: 5}}>
+                                <Input.Group compact>
+                                    <Input
+                                        size='large'
+                                        prefix={<SafetyCertificateOutlined/>}
+                                        placeholder="请输入验证码"
+                                        onChange={onChangeInput}
+                                        style={{width: '60%', marginRight: 10, padding: '6.5px 11px 6.5px 11px', verticalAlign: 'middle'}}
+                                    />
+                                    <img
+                                        alt="验证码"
+                                        style={{width: '30%', height: '35px', verticalAlign: 'middle', padding: '0px 0px 0px 0px'}}
+                                        src={captchaImage}
+                                        onClick={onClickImage}
+                                    />
+                                </Input.Group>
+                            </span>
+                            </div>
                         </>
                     )}
                 </LoginForm>
