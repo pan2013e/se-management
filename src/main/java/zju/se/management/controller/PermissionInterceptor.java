@@ -37,23 +37,29 @@ public class PermissionInterceptor extends SessionInterceptor {
              **/
             String service = URIComponents[2];
             try{
-                HttpSession session = req.getSession();
-                String token = (String) session.getAttribute("token");
-                DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
-                if(decodedJWT.getClaim("role").asString().equals(User.userType.ADMIN.toString())) {
-                    return true;
-                } else {
-                    throw new Exception("No permission");
-                }
+                return getPermission(req);
             } catch (Exception e) {
                 jsonResponse("{\"code\":-1,\"data\":null,\"message\":\"没有访问权限\"}", res);
             }
             return false;
+        } else {
+            try {
+                return getPermission(req);
+            } catch (Exception e) {
+                res.sendRedirect("/login");
+                return false;
+            }
         }
-        /*
-         * For now, only API permission check is implemented
-         * Web page permission check is reserved for future use
-         */
-        return true;
+    }
+
+    protected boolean getPermission(HttpServletRequest req) throws Exception {
+        HttpSession session = req.getSession();
+        String token = (String) session.getAttribute("token");
+        DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
+        if(decodedJWT.getClaim("role").asString().equals(User.userType.ADMIN.toString())) {
+            return true;
+        } else {
+            throw new Exception("No permission");
+        }
     }
 }

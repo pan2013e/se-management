@@ -57,12 +57,16 @@ public class AuthController extends BaseController {
     @PostMapping("/verify")
     @ApiOperation(value = "鉴权", notes = "供其他系统验证token是否有效")
     public Response<AccessControlResponseData> verify(
-            @RequestParam(value = "userName") String userName,
-            @RequestParam(value = "token") String token) throws UserNotFoundException, AuthErrorException {
-        DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
-        if (!decodedJWT.getClaim("userName").asString().equals(userName)) {
-            throw new AuthErrorException("用户名不匹配");
+            HttpServletRequest req
+//            @RequestParam(value = "userName") String userName,
+//            @RequestParam(value = "token") String token
+        ) throws UserNotFoundException, AuthErrorException {
+        if(!req.isRequestedSessionIdValid()){
+            throw new AuthErrorException("未登录");
         }
+        String token = (String) req.getSession().getAttribute("token");
+        DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
+        String userName = decodedJWT.getClaim("userName").asString();
         User user = userService.getUserByName(userName);
         return ResponseOK(new AccessControlResponseData(userName, user.getRole().toString()), "验证成功");
     }

@@ -49,7 +49,8 @@ public class WebConfig implements WebMvcConfigurer {
         // 需要特定权限的URI
         registry.addInterceptor(permissionInterceptor)
                 .addPathPatterns(
-                        "/api/user/**"
+                        "/api/user/**",
+                        "/admin/**"
                 );
 
     }
