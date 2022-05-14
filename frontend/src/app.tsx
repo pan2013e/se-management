@@ -62,6 +62,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
     return {
+        title: "后台管理系统",
         rightContentRender: () => <RightContent />,
         disableContentMargin: false,
         waterMarkProps: {
@@ -74,6 +75,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
                 history.push(loginPath);
             }
         },
+        navTheme: "dark",
         links: isDev
             ? [
                   <Link to="/~docs" key="docs">
@@ -87,7 +89,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         // unAccessible: <div>unAccessible</div>,
         // 增加一个 loading 的状态
         childrenRender: (children, props) => {
-            // if (initialState?.loading) return <PageLoading />;
+            if (initialState?.loading) return <PageLoading />;
             return (
                 <>
                     {children}

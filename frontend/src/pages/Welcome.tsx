@@ -1,8 +1,9 @@
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Alert, Typography } from 'antd';
-import { useIntl, FormattedMessage } from 'umi';
+import { FormattedMessage } from 'umi';
 import styles from './Welcome.less';
+import ProCard from "@ant-design/pro-card";
 
 const CodePreview: React.FC = ({ children }) => (
   <pre className={styles.pre}>
@@ -13,7 +14,6 @@ const CodePreview: React.FC = ({ children }) => (
 );
 
 const Welcome: React.FC = () => {
-  const intl = useIntl();
 
   return (
     <PageContainer
@@ -36,10 +36,7 @@ const Welcome: React.FC = () => {
 
       <Card>
         <Alert
-          message={intl.formatMessage({
-            id: 'pages.welcome.alertMessage',
-            defaultMessage: 'Faster and stronger heavy-duty components have been released.',
-          })}
+          message="Hello world"
           type="success"
           showIcon
           banner
