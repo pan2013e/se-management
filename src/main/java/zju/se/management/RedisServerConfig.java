@@ -23,7 +23,7 @@ public class RedisServerConfig {
     public void startRedis() throws IOException {
         redisServer = RedisServer.builder()
                 .port(PORT) //端口
-                .setting("maxheap 100m")
+                .setting("maxmemory 200m")
                 .setting("bind " + HOST) //绑定ip
                 .build();
         redisServer.start();
