@@ -16,7 +16,24 @@ const Welcome: React.FC = () => {
   const intl = useIntl();
 
   return (
-    <PageContainer>
+    <PageContainer
+        content="欢迎使用管理员系统"
+    >
+
+      <Card title="欢迎" style={{maxHeight:1200}}>
+        <Card style={{maxHeight:200}}>
+          管理员
+
+        </Card>
+        <Card title="doctor" style={{maxHeight:300}}>
+          我是张三，我不听话
+        </Card>
+        <Card title="patient" style={{maxHeight:200}}>
+          我是李四，我不吃药
+        </Card>
+      </Card>
+
+
       <Card>
         <Alert
           message={intl.formatMessage({
