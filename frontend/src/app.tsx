@@ -6,11 +6,26 @@ import { history, Link } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import { currentUser as queryCurrentUser } from './services/ant-design-pro/api';
-import { BookOutlined, LinkOutlined } from '@ant-design/icons';
+import { BookOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
+import {createWebSocket} from "@/websocket";
+import {notification} from "antd";
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
+const webSocketPath = 'ws://localhost:3000/message';
+
+const ws = createWebSocket(webSocketPath);
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if(history.location.pathname !== loginPath){
+        notification['info']({
+            message: data.title,
+            description: data.content,
+            duration: 0,
+        });
+    }
+};
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
