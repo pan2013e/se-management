@@ -62,11 +62,11 @@ public class UserService {
         return user.getPassword();
     }
 
-    private boolean isExist(String name) {
+    public boolean isExist(String name) {
        return userRepository.existsByUserName(name);
     }
 
-    private boolean isExist(int id) {
+    public boolean isExist(int id) {
         return userRepository.existsById(id);
     }
 
