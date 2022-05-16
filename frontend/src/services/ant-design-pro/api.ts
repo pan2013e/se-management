@@ -47,9 +47,8 @@ export async function patientRegister(
     });
 }
 
-/** 此处后端没有提供注释 GET /api/notices */
-export async function getNotices(options?: { [key: string]: any }) {
-    return request<API.NoticeIconList>('/api/notices', {
+export async function getNotices(userName: string, options?: { [key: string]: any }) {
+    return request<API.BackendResult>(`http://localhost:3000/api/ws/mq/${userName}`, {
         method: 'GET',
         ...(options || {}),
     });
