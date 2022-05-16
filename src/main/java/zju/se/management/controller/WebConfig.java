@@ -49,12 +49,11 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(sessionInterceptor)
                 .addPathPatterns(
                         "/**",
-                        "/api/ws/**",
                         "/api/arrange/**",
-                        "/api/doctor/**",
-                        "/api/ws/**"
+                        "/api/doctor/**"
                 ).excludePathPatterns(
                         "/api/oauth/**",
+                        "/api/ws/**", // put here for debug use
                         "/login",
                         "/test.html"
                 ).excludePathPatterns(staticResources);
