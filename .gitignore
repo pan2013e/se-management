@@ -36,6 +36,8 @@ build/
 .vscode/
 
 /**/node_modules/
+frontend/dist/**/*
+frontend/release/**/*
 frontend/src/.umi/**
 db.mv.db
 db.trace.db
