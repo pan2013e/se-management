@@ -1,5 +1,6 @@
 package zju.se.management.controller;
 
+import org.h2.api.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import zju.se.management.utils.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -32,6 +34,12 @@ public class ArrangeController extends BaseController {
     public Response<ArrangeListResponseData> getArrange() {
         return ResponseOK(new ArrangeListResponseData(arrangeService.getAllArranges()), "查询成功");
     }
+
+    @GetMapping("/arrange/{id}")
+    public Response<ArrangeListResponseData> getArrange(@PathVariable("id") int id) {
+        return ResponseOK(new ArrangeListResponseData(arrangeService.getArrangesByDoctorId(id)), "查询成功");
+    }
+
     @PostMapping("/arrange")
     public Response<?> addArrange(
             @RequestParam(value = "id") int id,
@@ -47,7 +55,7 @@ public class ArrangeController extends BaseController {
             arrange.setEnd_time(format.parse(end_time));
         }
         catch (Exception e){
-            //String start_time,end_time无法正确解析
+            throw new BaseException("时间格式错误");
         }
         arrange.setDayType(Arrange.dayEnum.valueOf(dayType));
         arrangeService.addArrange(arrange);

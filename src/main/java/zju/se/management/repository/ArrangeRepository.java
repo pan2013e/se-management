@@ -11,8 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface ArrangeRepository extends JpaRepository<Arrange, Integer> {
-
-
     boolean existsById(int id);
     void deleteById(int id);
     void deleteAllByUserId(int userId);

@@ -19,30 +19,41 @@ public class ArrangeService {
     private final ArrangeRepository arrangeRepository;
     private final DoctorInfoRepository doctorInfoRepository;
 
+    private final String[] weekDays = {
+            "SUNDAY",
+            "MONDAY",
+            "TUESDAY",
+            "WEDNESDAY",
+            "THURSDAY",
+            "FRIDAY",
+            "SATURDAY"
+    };
+
     @Autowired
     public ArrangeService(ArrangeRepository arrangeRepository,DoctorInfoRepository doctorInfoRepository) {
         this.arrangeRepository = arrangeRepository;
         this.doctorInfoRepository=doctorInfoRepository;
     }
-    @Deprecated
-    public List<Arrange> getAllArranges() {
+
+    private int getWeekday() {
         Date now = new Date();
-        String[] weekDays = {
-                "SUNDAY",
-                "MONDAY",
-                "TUESDAY",
-                "WEDNESDAY",
-                "THURSDAY",
-                "FRIDAY",
-                "SATURDAY"};
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
-        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        return cal.get(Calendar.DAY_OF_WEEK) - 1;
+    }
+
+    public List<Arrange> getAllArranges() {
+        int w = getWeekday();
         if (w < 0){
             w = 0;
         }
         return arrangeRepository.findAllByDayType(Arrange.dayEnum.valueOf(weekDays[w]));
     }
+
+    public List<Arrange> getArrangesByDoctorId(int doctorId) {
+        return arrangeRepository.findAllByUserId(doctorId);
+    }
+
     public void addArrange(@NotNull Arrange arrange){
         arrangeRepository.save(arrange);
     }
