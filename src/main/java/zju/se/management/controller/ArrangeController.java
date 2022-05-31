@@ -1,19 +1,17 @@
 package zju.se.management.controller;
 
-import org.h2.api.ErrorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import zju.se.management.entity.Arrange;
-import zju.se.management.entity.DoctorInfo;
 import zju.se.management.entity.User;
 import zju.se.management.service.ArrangeService;
 import zju.se.management.service.UserService;
-import zju.se.management.utils.*;
+import zju.se.management.utils.ArrangeListResponseData;
+import zju.se.management.utils.BaseException;
+import zju.se.management.utils.Response;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")

@@ -17,5 +17,4 @@ public interface ArrangeRepository extends JpaRepository<Arrange, Integer> {
     List<Arrange> findAllByDayType(Arrange.dayEnum dayType);
     List<Arrange> findAllByUserId(int userId);
     List<Arrange> findAllByUserIdAndDayType(int userId,Arrange.dayEnum dayType);
-    List<Arrange> findById(int id);
 }
