@@ -27,12 +27,6 @@ public class ArrangeController extends BaseController {
         this.userService=userService;
     }
 
-    @GetMapping("/arrange")
-    @Deprecated
-    public Response<ArrangeListResponseData> getArrange() {
-        return ResponseOK(new ArrangeListResponseData(arrangeService.getAllArranges()), "查询成功");
-    }
-
     @GetMapping("/arrange/{id}")
     public Response<ArrangeListResponseData> getArrange(@PathVariable("id") int id) {
         return ResponseOK(new ArrangeListResponseData(arrangeService.getArrangesByDoctorId(id)), "查询成功");
