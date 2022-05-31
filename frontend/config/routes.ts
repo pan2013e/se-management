@@ -37,9 +37,12 @@
     },
     {
         path: '/',
-        redirect: '/welcome',
+        layout: false,
+        component: './Index'
     },
     {
-        component: './404',
+        title: '404',
+        layout: false,
+        component: './404'
     },
 ];
