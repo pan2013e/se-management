@@ -3,6 +3,7 @@ package zju.se.management.service;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import zju.se.management.authentication.CryptoUtil;
 import zju.se.management.repository.UserRepository;
 import zju.se.management.entity.User;
 import zju.se.management.utils.UserAlreadyExistsException;
@@ -60,6 +61,12 @@ public class UserService {
     public String getPasswordByName(String name) throws UserNotFoundException {
         User user = getUserByName(name);
         return user.getPassword();
+    }
+
+    public void setPasswordByName(String name, String password) throws UserNotFoundException {
+        User user = getUserByName(name);
+        user.setPassword(password);
+        userRepository.save(user);
     }
 
     public boolean isExist(String name) {

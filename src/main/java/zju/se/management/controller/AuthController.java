@@ -127,7 +127,7 @@ public class AuthController extends BaseController {
         Base64.Encoder base64 = Base64.getEncoder();
         String base64Img = "data:image/jpeg;base64," + base64.encodeToString(os.toByteArray());
         redisTemplate.opsForValue().set(key, code);
-        redisTemplate.expire(key, 1, TimeUnit.MINUTES);
+        redisTemplate.expire(key, 3, TimeUnit.MINUTES);
         return ResponseOK(new CaptchaResponseData(key, base64Img),"生成成功");
     }
 
@@ -148,6 +148,20 @@ public class AuthController extends BaseController {
                 return ResponseOK("验证成功");
             }
         }
+    }
+
+    @PostMapping("/changePassword")
+    @ApiOperation(value = "修改密码", notes = "修改密码")
+    public Response<?> changePassword(
+            @RequestParam(value = "userName") @NotNull String userName,
+            @RequestParam(value = "oldPassword") @NotNull String oldPassword,
+            @RequestParam(value = "newPassword") @NotNull String newPassword) throws UserNotFoundException, AuthErrorException {
+        boolean validationResult = CryptoUtil.validate(oldPassword, userService.getPasswordByName(userName));
+        if (!validationResult) {
+            throw new AuthErrorException("密码错误");
+        }
+        userService.setPasswordByName(userName, CryptoUtil.encrypt(newPassword));
+        return ResponseOK("修改成功");
     }
 
 }
