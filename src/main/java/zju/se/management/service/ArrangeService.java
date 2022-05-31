@@ -51,7 +51,14 @@ public class ArrangeService {
     }
 
     public List<Arrange> getArrangesByDoctorId(int doctorId) {
-        return arrangeRepository.findAllByUserId(doctorId);
+        List<Arrange> list = new ArrayList<>();
+        for(int i=0;i<7;i++){
+            List<Arrange> temp=arrangeRepository.findAllByUserIdAndDayType(doctorId,Arrange.dayEnum.valueOf(weekDays[i]));
+            if(!temp.isEmpty()){
+                list.add(temp.get(0));
+            }
+        }
+        return list;
     }
 
     public void addArrange(@NotNull Arrange arrange){
