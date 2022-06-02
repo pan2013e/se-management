@@ -2,6 +2,25 @@
 /* eslint-disable */
 import { request } from 'umi';
 
+/**
+ * 获取全部预约的数据
+ */
+export async function getArrangeInfo(options?: { [key: string]: any }) {
+    return request<API.BackendResult>('http://localhost:3000/api/arrange', {
+        method: 'GET' ,
+        ...( options || {} )
+    })
+}
+/**
+ * 获取全部医生的数据
+ */
+export async function getDoctorInfo(options?: { [key: string]: any }) {
+    return request<API.BackendResult>('http://localhost:3000/api/doctor/all', {
+        method: 'GET' ,
+        ...(options || {}),
+    })
+}
+
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(body: { [key: string]: any }, options?: { [key: string]: any }) {
     return request<API.BackendResult>('http://localhost:3000/api/oauth/verify', {
