@@ -1,8 +1,14 @@
 package zju.se.management.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import zju.se.management.authentication.CryptoUtil;
 import zju.se.management.entity.DoctorInfo;
 import zju.se.management.entity.User;
 import zju.se.management.service.DoctorInfoService;
@@ -16,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
+@Api(protocols = "http", consumes = "application/json", produces = "application/json", tags = "医生接口")
 public class DoctorInfoController extends BaseController {
 
     private final DoctorInfoService doctorInfoService;
@@ -27,33 +34,54 @@ public class DoctorInfoController extends BaseController {
         this.userService = userService;
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    private static class nameList extends ResponseData {
+        List<String> names;
+    }
+
     @GetMapping("/hospital")
-    public Response<List<String>> getHospital() {
+    @ApiOperation(value = "获取所有医院名称")
+    public Response<nameList> getHospital() {
         HashSet<String> hospitals = new HashSet<>();
         doctorInfoService.getAllDoctorInfos()
                          .forEach(doctorInfo -> hospitals.add(doctorInfo.getHospital()));
-        return ResponseOK(hospitals.stream().toList(), "查询成功");
+        return ResponseOK(new nameList(hospitals.stream().toList()), "查询成功");
+    }
+
+    @GetMapping("/dept")
+    @ApiOperation(value = "获取所有科室名称")
+    public Response<nameList> getDepartment() {
+        HashSet<String> departments = new HashSet<>();
+        doctorInfoService.getAllDoctorInfos()
+                         .forEach(doctorInfo -> departments.add(doctorInfo.getDepartment()));
+        return ResponseOK(new nameList(departments.stream().toList()), "查询成功");
     }
 
     @GetMapping("/doctor/all")
+    @ApiOperation(value = "获取所有医生信息")
     public Response<DoctorInfoListResponseData> getDoctorInfo() {
         return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getAllDoctorInfos()),
                 "查询成功");
     }
 
     @GetMapping("/doctor/dept/{dept}")
+    @ApiOperation(value = "获取某个科室的所有医生")
     public Response<DoctorInfoListResponseData> getDoctorInfoByDept(@PathVariable("dept") String dept) {
         return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getDoctorInfoByDepartment(dept)),
                 "查询成功");
     }
 
     @GetMapping("/doctor/hospital/{hospital}")
+    @ApiOperation(value = "获取某个医院的所有医生")
     public Response<DoctorInfoListResponseData> getDoctorInfoByHospital(@PathVariable("hospital") String hospital) {
         return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getDoctorInfoByHospital(hospital)),
                 "查询成功");
     }
 
     @GetMapping("/doctor")
+    @ApiOperation(value = "获取某个医院的某个科室所有医生的信息", notes = "医院和科室如果有一项为空,则返回所有医生信息")
     public Response<DoctorInfoListResponseData> getDoctorInfoByHospitalAndDept(
             @RequestParam("hospital") String hospital,
             @RequestParam("department") String department) {
@@ -65,12 +93,20 @@ public class DoctorInfoController extends BaseController {
     }
 
     @PostMapping("/doctor")
+    @ApiOperation(value = "添加医生信息", notes = "管理前端使用")
     public Response<?> addDoctorInfo(
-            @RequestParam(value = "userId") int userId,
+            @RequestParam(value = "userName") String userName,
+            @RequestParam(value = "realName") String realName,
+            @RequestParam(value = "password") String password,
             @RequestParam(value = "department") String department,
             @RequestParam(value = "hospital") String hospital) throws BaseException {
         DoctorInfo doctorInfo = new DoctorInfo();
-        User user = userService.getUserById(userId);
+        User user = new User();
+        user.setUserName(userName);
+        user.setRealName(realName);
+        user.setRole(User.userType.DOCTOR);
+        user.setPassword(CryptoUtil.encrypt(password));
+        userService.addUser(user);
         doctorInfo.setUser(user);
         doctorInfo.setDepartment(department);
         doctorInfo.setHospital(hospital);

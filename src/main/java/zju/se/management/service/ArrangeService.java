@@ -53,26 +53,21 @@ public class ArrangeService {
     public List<List<Date>> getArrangesByDoctorId(int doctorId) {
         List<List<Date>> list = new ArrayList<>();
         for(int i=0;i<7;i++){
-            List<Arrange> temp=arrangeRepository.findAllByUserIdAndDayType(doctorId,Arrange.dayEnum.valueOf(weekDays[i]));
+            List<Arrange> temp = arrangeRepository.findAllByUserIdAndDayType(doctorId,Arrange.dayEnum.valueOf(weekDays[i]));
+            List<Date> date = new ArrayList<>();
             if(!temp.isEmpty()){
-                List<Date> date=new ArrayList<>();
-                for(int j=0;j<temp.size();j++){
-                    Arrange arrange=temp.get(j);
+                for (Arrange arrange : temp) {
                     int k;
-                    for(k=0;k<date.size();k+=2){
-                        if(arrange.getStart_time().compareTo(date.get(k))<0){
-                                break;
+                    for (k = 0; k < date.size(); k += 2) {
+                        if (arrange.getStart_time().compareTo(date.get(k)) < 0) {
+                            break;
                         }
                     }
-                    date.add(k,arrange.getStart_time());
-                    date.add(k+1,arrange.getEnd_time());
+                    date.add(k, arrange.getStart_time());
+                    date.add(k + 1, arrange.getEnd_time());
                 }
-                list.add(date);
             }
-            else{
-                List<Date> date=new ArrayList<>();
-                list.add(date);
-            }
+            list.add(date);
         }
         return list;
     }
@@ -91,5 +86,13 @@ public class ArrangeService {
             }
         }
         return list;
+    }
+
+    public void resetArrange(int userId, Arrange.dayEnum day){
+        arrangeRepository.deleteAllByUserIdAndDayType(userId, day);
+    }
+
+    public void deleteArrangeByUserId(int userId){
+        arrangeRepository.deleteAllByUserId(userId);
     }
 }

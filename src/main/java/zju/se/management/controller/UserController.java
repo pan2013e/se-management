@@ -1,61 +1,50 @@
 package zju.se.management.controller;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import zju.se.management.authentication.CryptoUtil;
-import zju.se.management.entity.Arrange;
 import zju.se.management.entity.User;
-import zju.se.management.entity.Arrange;
 import zju.se.management.service.UserService;
-import zju.se.management.service.ArrangeService;
 import zju.se.management.utils.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Random;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 @CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
 public class UserController extends BaseController {
 
     private final UserService userService;
-    private final ArrangeService arrangeService;
 
     @Autowired
-    public UserController(UserService userService,ArrangeService arrangeService) {
-        this.arrangeService = arrangeService;
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/")
     public Response<UserListResponseData> getUser() {
         return ResponseOK(new UserListResponseData(userService.getAllUsers()), "查询成功");
     }
 
-    @GetMapping("/user/id/{id}")
+    @GetMapping("/id/{id}")
     public Response<UserResponseData> getUserById(@PathVariable("id") Integer id) throws UserNotFoundException {
         User user = userService.getUserById(id);
         return ResponseOK(new UserResponseData(user), "查询成功");
     }
 
-    @GetMapping("/user/name/{name}")
+    @GetMapping("/name/{name}")
     public Response<UserResponseData> getUserByName(@PathVariable("name") String name) throws UserNotFoundException {
         User user = userService.getUserByName(name);
         return ResponseOK(new UserResponseData(user), "查询成功");
     }
 
-    @GetMapping("/user/role/{role}")
+    @GetMapping("/role/{role}")
     public Response<UserListResponseData> getUserByRole(@PathVariable("role") String role) {
         return ResponseOK(new UserListResponseData(userService.getUserByRole(User.userType.valueOf(role.toUpperCase()))),
                 "查询成功");
     }
 
-
-    @PostMapping("/user")
+    @PostMapping("/")
     public Response<?> addUser(
             @RequestParam(value = "userName") String userName,
             @RequestParam(value = "realName") String realName,
