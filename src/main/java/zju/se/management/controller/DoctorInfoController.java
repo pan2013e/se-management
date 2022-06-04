@@ -114,4 +114,23 @@ public class DoctorInfoController extends BaseController {
         return ResponseOK("添加成功");
     }
 
+    @DeleteMapping("/doctor/{id}")
+    @ApiOperation(value = "删除医生信息", notes = "管理前端使用")
+    public Response<?> deleteDoctorInfo(@PathVariable("id") String id) throws BaseException {
+        userService.deleteUserById(Integer.parseInt(id));
+        doctorInfoService.deleteDoctorInfoById(Integer.parseInt(id));
+        return ResponseOK("删除成功");
+    }
+
+    @DeleteMapping("/doctor")
+    @ApiOperation(value = "删除医生信息", notes = "管理前端使用")
+    public Response<?> deleteDoctorInfo(
+            @RequestParam(value = "id") String[] id) throws BaseException {
+        for(String s : id) {
+            userService.deleteUserById(Integer.parseInt(s));
+            doctorInfoService.deleteDoctorInfoById(Integer.parseInt(s));
+        }
+        return ResponseOK("删除成功");
+    }
+
 }
