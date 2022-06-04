@@ -3,12 +3,24 @@
 import { request } from 'umi';
 
 /**
+ * 添加预约
+ * @param body
+ * @param options
+ */
+export async function addArrange(body:{[key: string]:any}, options?:{[key:string]:any }) {
+    return request<API.BackendResult>('http://localhost:3000/api/arrange', {
+        method: 'POST' ,
+        params: body ,
+        ...( options || {} ),
+    })
+}
+/**
  * 获取全部预约的数据
  */
 export async function getArrangeInfo(options?: { [key: string]: any }) {
     return request<API.BackendResult>('http://localhost:3000/api/arrange', {
         method: 'GET' ,
-        ...( options || {} )
+        ...( options || {} ),
     })
 }
 /**
