@@ -40,6 +40,20 @@ declare namespace API {
         success?: boolean;
     };
 
+    type DoctorInfoItem = {
+        id?: number;
+        userName?: string;
+        realName?: string;
+        password?: string;
+        hospital?: string;
+        department?: string;
+    };
+
+    type DoctorInfoList = {
+        data?: DoctorInfoItem[];
+        total?: number;
+    };
+
     type FakeCaptcha = {
         code?: number;
         status?: string;

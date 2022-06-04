@@ -1,6 +1,5 @@
 package zju.se.management.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.*;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +14,6 @@ import zju.se.management.service.UserService;
 import zju.se.management.utils.*;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
@@ -43,7 +41,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/login")
-    @ApiOperation(value = "用户登录", notes = "前端登陆界面使用")
+    @ApiOperation(value = "用户登录", notes = "管理前端使用")
     public Response<?> login(
             HttpSession session,
             @RequestParam(value = "userName") String userName,
@@ -65,7 +63,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/register")
-    @ApiOperation(value = "用户注册", notes = "前端注册界面使用，仅支持病人用户注册")
+    @ApiOperation(value = "用户注册", notes = "管理前端使用")
     public Response<?> register(
             @RequestParam(value = "userName") String userName,
             @RequestParam(value = "realName") String realName,
@@ -87,7 +85,7 @@ public class AuthController extends BaseController {
     }
 
     @GetMapping("/verify")
-    @ApiOperation(value = "鉴权", notes = "验证登录是否有效")
+    @ApiOperation(value = "鉴权，验证登录是否有效", notes = "[暂不可用]")
     public Response<AccessControlResponseData> verify(HttpSession session, HttpServletResponse res) throws BaseException {
         res.setHeader("Cache-Control", "no-cache, no-store");
 //        if(session.getAttribute("token") == null) {
@@ -104,7 +102,7 @@ public class AuthController extends BaseController {
     }
 
     @GetMapping("/logout")
-    @ApiOperation(value = "用户登出", notes = "用户登出")
+    @ApiOperation(value = "用户登出", notes = "各系统可用")
     public Response<?> logout(HttpSession session, HttpServletResponse res) {
         res.setHeader("Cache-Control", "no-cache, no-store");
         if(session.getAttribute("token") == null) {
@@ -116,7 +114,7 @@ public class AuthController extends BaseController {
     }
 
     @GetMapping("/captcha")
-    @ApiOperation(value = "获取验证码", notes = "获取验证码")
+    @ApiOperation(value = "获取验证码", notes = "管理前端使用")
     public Response<CaptchaResponseData> captcha(HttpServletResponse res) throws IOException {
         res.setHeader("Cache-Control", "no-cache, no-store");
         String key = UUID.randomUUID().toString();
@@ -132,7 +130,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/captcha")
-    @ApiOperation(value = "验证验证码", notes = "验证验证码")
+    @ApiOperation(value = "验证验证码", notes = "管理前端使用")
     public Response<?> captcha(
             @RequestParam(value = "key") @NotNull String key,
             @RequestParam(value = "code") String code) {
@@ -151,7 +149,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/changePassword")
-    @ApiOperation(value = "修改密码", notes = "修改密码")
+    @ApiOperation(value = "修改密码", notes = "管理前端使用")
     public Response<?> changePassword(
             @RequestParam(value = "userName") @NotNull String userName,
             @RequestParam(value = "oldPassword") @NotNull String oldPassword,
