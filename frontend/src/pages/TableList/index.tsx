@@ -10,7 +10,7 @@ import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
 import ProDescriptions from '@ant-design/pro-descriptions';
 import type { FormValueType } from './components/UpdateForm';
 import UpdateForm from './components/UpdateForm';
-import { rule, addDoctor, updateRule, removeRule, getDoctors } from '@/services/ant-design-pro/api';
+import {rule, addDoctor, updateRule, removeRule, getDoctors, deleteDoctor} from '@/services/ant-design-pro/api';
 import styles from "@/pages/user/Login/index.less";
 
 
@@ -45,20 +45,17 @@ const handleUpdate = async (fields: FormValueType) => {
 };
 
 const handleRemove = async (selectedRows: API.DoctorInfoItem[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-  try {
-    await removeRule({
-      key: selectedRows.map((row) => row.key),
+    if (!selectedRows) return true;
+    const res = await deleteDoctor({
+        id: selectedRows.map((row) => row.id)
     });
-    hide();
-    message.success('Deleted successfully and will refresh soon');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Delete failed, please try again');
-    return false;
-  }
+    if(res.code === 0){
+        message.success('删除成功');
+        return true;
+    } else {
+        message.error(res.message);
+        return false;
+    }
 };
 
 const TableList: React.FC = () => {

@@ -111,9 +111,13 @@ export async function addDoctor(
 }
 
 /** 删除规则 DELETE /api/rule */
-export async function removeRule(options?: { [key: string]: any }) {
-    return request<Record<string, any>>('/api/rule', {
+export async function deleteDoctor(
+    body: { [key: string]: any },
+    options?: { [key: string]: any }
+) {
+    return request<API.BackendResult>(`${baseUrl}/doctor`, {
         method: 'DELETE',
+        params: body,
         ...(options || {}),
     });
 }
