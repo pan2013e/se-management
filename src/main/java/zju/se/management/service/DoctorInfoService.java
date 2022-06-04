@@ -44,10 +44,7 @@ public class DoctorInfoService {
     }
 
     public void deleteDoctorInfoById(int id) throws DoctorInfoNotFoundException {
-        if(!isExist(id)) {
-            throw new DoctorInfoNotFoundException();
-        }
-        doctorInfoRepository.deleteById(id);
+        doctorInfoRepository.deleteByUserId(id);
     }
 
     public void addDoctorInfo(@NotNull DoctorInfo doctorInfo) throws DoctorInfoAlreadyExistsException{
