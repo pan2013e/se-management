@@ -4,7 +4,7 @@ import {Card, Alert, Typography, message} from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
 import styles from './Welcome.less';
 import ProCard from "@ant-design/pro-card";
-import { getArrangeInfo, getDoctorInfo} from '@/services/ant-design-pro/api';
+import { getDoctorInfo} from '@/services/ant-design-pro/api';
 
 const CodePreview: React.FC = ({ children }) => (
   <pre className={styles.pre}>
@@ -22,26 +22,26 @@ const Welcome: React.FC = () => {
     const [doctorsNumber,setDoctorsNumber] = useState<string>('null') ;
     const [arrangeNumber,setArrangeNumber] = useState<string>('null') ;
 
-    useEffect(()=>{
-      getDoctorInfo().then( a => {
-        if ( a.data === null ) {
-          setDoctorsNumber('0') ;
-        }else{
-          let doctors:any[] = a.data.doctorInfos ;
-          if ( doctors === null ) {
-            setDoctorsNumber('0') ;
-          } else
-            setDoctorsNumber( doctors.length as unknown as string) ;
-        }
-      });
-      getArrangeInfo().then( a => {
-          if ( a.data === null || a.data.arranges === null ) {
-              setArrangeNumber('0') ;
-          } else {
-              setArrangeNumber(a.data.arranges.length as unknown as string) ;
-          }
-      })
-    },[]) ;
+    // useEffect(()=>{
+    //   getDoctorInfo().then( a => {
+    //     if ( a.data === null ) {
+    //       setDoctorsNumber('0') ;
+    //     }else{
+    //       let doctors:any[] = a.data.doctorInfos ;
+    //       if ( doctors === null ) {
+    //         setDoctorsNumber('0') ;
+    //       } else
+    //         setDoctorsNumber( doctors.length as unknown as string) ;
+    //     }
+    //   });
+    //   // getArrangeInfo().then( a => {
+    //   //     if ( a.data === null || a.data.arranges === null ) {
+    //   //         setArrangeNumber('0') ;
+    //   //     } else {
+    //   //         setArrangeNumber(a.data.arranges.length as unknown as string) ;
+    //   //     }
+    //   // })
+    // },[]) ;
 
   // const docsinfo = async () => {
   //   const doctors = await getDoctorInfo() ;
