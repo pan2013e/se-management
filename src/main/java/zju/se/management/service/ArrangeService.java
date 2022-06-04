@@ -19,30 +19,64 @@ public class ArrangeService {
     private final ArrangeRepository arrangeRepository;
     private final DoctorInfoRepository doctorInfoRepository;
 
+    private final String[] weekDays = {
+            "SUNDAY",
+            "MONDAY",
+            "TUESDAY",
+            "WEDNESDAY",
+            "THURSDAY",
+            "FRIDAY",
+            "SATURDAY"
+    };
+
     @Autowired
     public ArrangeService(ArrangeRepository arrangeRepository,DoctorInfoRepository doctorInfoRepository) {
         this.arrangeRepository = arrangeRepository;
         this.doctorInfoRepository=doctorInfoRepository;
     }
-    @Deprecated
-    public List<Arrange> getAllArranges() {
+
+    private int getWeekday() {
         Date now = new Date();
-        String[] weekDays = {
-                "SUNDAY",
-                "MONDAY",
-                "TUESDAY",
-                "WEDNESDAY",
-                "THURSDAY",
-                "FRIDAY",
-                "SATURDAY"};
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
-        int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
+        return cal.get(Calendar.DAY_OF_WEEK) - 1;
+    }
+
+    public List<Arrange> getAllArranges() {
+        int w = getWeekday();
         if (w < 0){
             w = 0;
         }
         return arrangeRepository.findAllByDayType(Arrange.dayEnum.valueOf(weekDays[w]));
     }
+
+    public List<List<Date>> getArrangesByDoctorId(int doctorId) {
+        List<List<Date>> list = new ArrayList<>();
+        for(int i=0;i<7;i++){
+            List<Arrange> temp=arrangeRepository.findAllByUserIdAndDayType(doctorId,Arrange.dayEnum.valueOf(weekDays[i]));
+            if(!temp.isEmpty()){
+                List<Date> date=new ArrayList<>();
+                for(int j=0;j<temp.size();j++){
+                    Arrange arrange=temp.get(j);
+                    int k;
+                    for(k=0;k<date.size();k+=2){
+                        if(arrange.getStart_time().compareTo(date.get(k))<0){
+                                break;
+                        }
+                    }
+                    date.add(k,arrange.getStart_time());
+                    date.add(k+1,arrange.getEnd_time());
+                }
+                list.add(date);
+            }
+            else{
+                List<Date> date=new ArrayList<>();
+                list.add(date);
+            }
+        }
+        return list;
+    }
+
     public void addArrange(@NotNull Arrange arrange){
         arrangeRepository.save(arrange);
     }

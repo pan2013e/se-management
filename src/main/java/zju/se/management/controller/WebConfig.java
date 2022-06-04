@@ -39,23 +39,23 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 需要登录的URI
-        registry.addInterceptor(sessionInterceptor)
-                .addPathPatterns(
-                        "/**",
-                        "/api/**"
-                ).excludePathPatterns(
-                        "/api/oauth/**",
-                        "/api/user/**",
-                        "/login"
-
-                ).excludePathPatterns(staticResources);
-        // 需要特定权限的URI
+        // 需要管理员权限的URI
         registry.addInterceptor(permissionInterceptor)
                 .addPathPatterns(
                         "/api/user/**",
                         "/admin/**"
                 );
-
+        // 需要登录的URI
+        registry.addInterceptor(sessionInterceptor)
+                .addPathPatterns(
+                        "/**",
+                        "/api/arrange/**",
+                        "/api/doctor/**"
+                ).excludePathPatterns(
+                        "/api/oauth/**",
+                        "/api/ws/**", // put here for debug use
+                        "/login",
+                        "/test.html"
+                ).excludePathPatterns(staticResources);
     }
 }

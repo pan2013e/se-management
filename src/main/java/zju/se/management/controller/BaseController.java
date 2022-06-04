@@ -4,9 +4,15 @@ import org.springframework.web.bind.annotation.RestController;
 import zju.se.management.utils.Response;
 import zju.se.management.utils.ResponseData;
 
+import java.util.List;
+
 @RestController
 public class BaseController {
     public <T extends ResponseData> Response<T> ResponseOK(T data, String message) {
+        return new Response<>(Response.OK, data, message);
+    }
+
+    public <T> Response<List<T>> ResponseOK(List<T> data, String message) {
         return new Response<>(Response.OK, data, message);
     }
 

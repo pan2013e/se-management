@@ -9,6 +9,9 @@ import zju.se.management.service.DoctorInfoService;
 import zju.se.management.service.UserService;
 import zju.se.management.utils.*;
 
+import java.util.HashSet;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
@@ -22,6 +25,14 @@ public class DoctorInfoController extends BaseController {
     public DoctorInfoController(DoctorInfoService doctorInfoService, UserService userService) {
         this.doctorInfoService = doctorInfoService;
         this.userService = userService;
+    }
+
+    @GetMapping("/hospital")
+    public Response<List<String>> getHospital() {
+        HashSet<String> hospitals = new HashSet<>();
+        doctorInfoService.getAllDoctorInfos()
+                         .forEach(doctorInfo -> hospitals.add(doctorInfo.getHospital()));
+        return ResponseOK(hospitals.stream().toList(), "查询成功");
     }
 
     @GetMapping("/doctor/all")
@@ -46,6 +57,9 @@ public class DoctorInfoController extends BaseController {
     public Response<DoctorInfoListResponseData> getDoctorInfoByHospitalAndDept(
             @RequestParam("hospital") String hospital,
             @RequestParam("department") String department) {
+        if(hospital == null || department == null) {
+            return getDoctorInfo();
+        }
         return ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getDoctorInfoByHospitalAndDepartment(hospital, department)),
                 "查询成功");
     }

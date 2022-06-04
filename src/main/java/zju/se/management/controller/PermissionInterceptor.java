@@ -40,8 +40,8 @@ public class PermissionInterceptor extends SessionInterceptor {
                 return getPermission(req);
             } catch (Exception e) {
                 jsonResponse("{\"code\":-1,\"data\":null,\"message\":\"没有访问权限\"}", res);
+                return false;
             }
-            return false;
         } else {
             try {
                 return getPermission(req);

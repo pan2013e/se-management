@@ -1,5 +1,6 @@
-import { GithubOutlined } from '@ant-design/icons';
+import { GithubOutlined, BookOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-layout';
+import React from "react";
 
 const Footer: React.FC = () => {
     const defaultMessage = 'SE Group';
@@ -13,13 +14,23 @@ const Footer: React.FC = () => {
                 {
                     key: 'github',
                     title: (
-                        <p>
-                            <GithubOutlined /> Check out this project on Github
-                        </p>
+                        <span>
+                            <GithubOutlined /> Github
+                        </span>
                     ),
-                    href: 'https://github.com/pan2013e/se-management-frontend',
+                    href: 'https://github.com/pan2013e/se-management',
                     blankTarget: true,
                 },
+                {
+                    key: 'docs',
+                    title: (
+                        <span>
+                            <BookOutlined /> Documentation
+                        </span>
+                    ),
+                    href: 'https://zjuse-2022.github.io/docs/',
+                    blankTarget: true,
+                }
             ]}
         />
     );

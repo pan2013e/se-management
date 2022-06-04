@@ -1,14 +1,14 @@
 import { Space } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import React from 'react';
-import { useModel, SelectLang } from 'umi';
+import { useModel } from 'umi';
 import Avatar from './AvatarDropdown';
 import HeaderSearch from '../HeaderSearch';
 import styles from './index.less';
 
 export type SiderTheme = 'light' | 'dark';
 
-const GlobalHeaderRight: React.FC = () => {
+const GlobalHeaderRight: React.FC = (message?: any) => {
   const { initialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
@@ -42,20 +42,19 @@ const GlobalHeaderRight: React.FC = () => {
             value: 'Pro Layout',
           },
         ]}
-        // onSearch={value => {
-        //   console.log('input', value);
-        // }}
+        onSearch={(value) => {
+          alert(`input ${value}`);
+        }}
       />
       <span
         className={styles.action}
         onClick={() => {
-          window.open('https://pro.ant.design/docs/getting-started');
+          window.open('https://zjuse-2022.github.io/docs/');
         }}
       >
         <QuestionCircleOutlined />
       </span>
-      <Avatar />
-      <SelectLang className={styles.action} />
+      <Avatar menu={true}/>
     </Space>
   );
 };

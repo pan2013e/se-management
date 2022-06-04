@@ -7,6 +7,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { logout } from '@/services/ant-design-pro/api';
 import type { MenuInfo } from 'rc-menu/lib/interface';
+import crypto from 'crypto';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -20,9 +21,9 @@ const loginOut = async () => {
   const { query = {}, search, pathname } = history.location;
   const { redirect } = query;
   // Note: There may be security issues, please note
-  if (window.location.pathname !== '/user/login' && !redirect) {
+  if (window.location.pathname !== '/login' && !redirect) {
     history.replace({
-      pathname: '/user/login',
+      pathname: '/login',
       search: stringify({
         redirect: pathname + search,
       }),
@@ -64,11 +65,14 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.name) {
-    return loading;
-  }
+    const gravatarHash = crypto.createHash('md5')
 
-  const menuHeaderDropdown = (
+        .update(currentUser?.userName || '')
+        .digest('hex');
+
+    const gravatarUrl = `https://sdn.geekzu.org/avatar/${gravatarHash}.png?&d=identicon`;
+
+    const menuHeaderDropdown = (
     <Menu className={styles.menu} selectedKeys={[]} onClick={onMenuClick}>
       {menu && (
         <Menu.Item key="center">
@@ -93,8 +97,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
-        <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-        <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+        <Avatar size="default" className={styles.avatar} src={gravatarUrl} alt="avatar" />
+        <span className={`${styles.name} anticon`}>{currentUser?.userName || 'undefined'}</span>
       </span>
     </HeaderDropdown>
   );
