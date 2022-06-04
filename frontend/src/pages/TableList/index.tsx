@@ -1,16 +1,13 @@
 import {HomeOutlined, HeartOutlined, LockOutlined, PlusOutlined, UserOutlined} from '@ant-design/icons';
-import { Button, message, Input, Drawer } from 'antd';
+import { Button, message, Popconfirm } from 'antd';
 import React, { useState, useRef } from 'react';
 import { useIntl, FormattedMessage } from 'umi';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
-import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-import ProDescriptions from '@ant-design/pro-descriptions';
+import { ModalForm, ProFormText } from '@ant-design/pro-form';
 import type { FormValueType } from './components/UpdateForm';
-import UpdateForm from './components/UpdateForm';
-import {rule, addDoctor, updateRule, removeRule, getDoctors, deleteDoctor} from '@/services/ant-design-pro/api';
+import { addDoctor, updateRule, getDoctors, deleteDoctor } from '@/services/ant-design-pro/api';
 import styles from "@/pages/user/Login/index.less";
 
 
@@ -73,12 +70,15 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DoctorInfoItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.DoctorInfoItem[]>([]);
+  const [popConfirm, setPopConfirm] = useState<boolean>(false);
 
-  /**
-   * @en-US International configuration
-   * @zh-CN 国际化配置
-   * */
-  const intl = useIntl();
+  const handlePopConfirmCancel = () => {
+      setPopConfirm(false);
+  };
+
+  const handlePopConfirmOpen = () => {
+      setPopConfirm(true);
+  };
 
   const columns: ProColumns<API.DoctorInfoItem>[] = [
     {
@@ -165,6 +165,7 @@ const TableList: React.FC = () => {
       />
       {selectedRowsState?.length > 0 && (
         <FooterToolbar
+
           extra={
             <div>
               已选择{' '}
@@ -173,15 +174,21 @@ const TableList: React.FC = () => {
             </div>
           }
         >
-          <Button
-            onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量删除
-          </Button>
+            <Popconfirm
+                title="确认删除?"
+                placement="topRight"
+                visible={popConfirm}
+                onConfirm={async () => {
+                    await handleRemove(selectedRowsState);
+                    setSelectedRows([]);
+                    actionRef.current?.reloadAndRest?.();
+                }}
+                onCancel={handlePopConfirmCancel}
+            >
+                <Button type="primary" onClick={handlePopConfirmOpen}>
+                    删除
+                </Button>
+            </Popconfirm>
         </FooterToolbar>
       )}
       <ModalForm

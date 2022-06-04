@@ -90,6 +90,36 @@ export async function getDoctors(
     }
 }
 
+export async function getDoctorNumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/doctors`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
+export async function getPatientNumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/patients`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
 /** 新建规则 PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {
     return request<API.RuleListItem>('/api/rule', {

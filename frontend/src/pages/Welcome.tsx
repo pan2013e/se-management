@@ -4,7 +4,7 @@ import {Card, Alert, Typography, message} from 'antd';
 import { useIntl, FormattedMessage } from 'umi';
 import styles from './Welcome.less';
 import ProCard from "@ant-design/pro-card";
-import { getArrangeInfo, getDoctorInfo} from '@/services/ant-design-pro/api';
+import { getDoctorNumbers, getPatientNumbers } from '@/services/ant-design-pro/api';
 
 const CodePreview: React.FC = ({ children }) => (
   <pre className={styles.pre}>
@@ -19,36 +19,23 @@ const Welcome: React.FC = () => {
     const user = localStorage.getItem('userName') ;
 
     // const [type, setType] = useState<string>('welcome') ;
-    const [doctorsNumber,setDoctorsNumber] = useState<string>('null') ;
-    const [arrangeNumber,setArrangeNumber] = useState<string>('null') ;
+    const [doctorsNumber, setDoctorsNumber] = useState<number>(0) ;
+    const [patientNumber, setPatientNumber] = useState<number>(0) ;
+
+    const initDoctorNumber = async () => {
+        const result = await getDoctorNumbers();
+        setDoctorsNumber(result);
+    }
+
+    const initPatientNumber = async () => {
+        const result = await getPatientNumbers();
+        setPatientNumber(result);
+    }
 
     useEffect(()=>{
-      getDoctorInfo().then( a => {
-        if ( a.data === null ) {
-          setDoctorsNumber('0') ;
-        }else{
-          let doctors:any[] = a.data.doctorInfos ;
-          if ( doctors === null ) {
-            setDoctorsNumber('0') ;
-          } else
-            setDoctorsNumber( doctors.length as unknown as string) ;
-        }
-      });
-      getArrangeInfo().then( a => {
-          if ( a.data === null || a.data.arranges === null ) {
-              setArrangeNumber('0') ;
-          } else {
-              setArrangeNumber(a.data.arranges.length as unknown as string) ;
-          }
-      })
+        initDoctorNumber();
+        initPatientNumber();
     },[]) ;
-
-  // const docsinfo = async () => {
-  //   const doctors = await getDoctorInfo() ;
-  //   return doctors ;
-  // } ;
-  //
-  // const doctors = docsinfo() ;
 
   return (
       <div>
@@ -90,7 +77,7 @@ const Welcome: React.FC = () => {
 
               <Card title="预约信息">
                 <p>
-                    共：{arrangeNumber}个新的预约。
+                    共：{patientNumber}位注册病人。
                 </p>
               </Card>
 
