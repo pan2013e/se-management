@@ -14,6 +14,9 @@ export async function currentUser(
     return request<API.BackendResult>(`${baseUrl}/oauth/verify`, {
         method: 'GET',
         params: body,
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
@@ -25,6 +28,9 @@ export async function logout(
     localStorage.clear();
     return request<API.BackendResult>(`${baseUrl}/oauth/logout`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
@@ -34,6 +40,9 @@ export async function getCaptcha(
 ) {
     return request<API.BackendResult>(`${baseUrl}/oauth/captcha`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
@@ -46,6 +55,9 @@ export async function login(
     return request<API.BackendResult>(`${baseUrl}/oauth/login`, {
         method: 'POST',
         params: body,
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
@@ -57,6 +69,9 @@ export async function patientRegister(
     return request<API.BackendResult>(`${baseUrl}/oauth/register`, {
         method: 'POST',
         params: body,
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
@@ -64,6 +79,9 @@ export async function patientRegister(
 export async function getNotices(userName: string, options?: { [key: string]: any }) {
     return request<API.BackendResult>(`${baseUrl}/ws/mq/${userName}`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
@@ -74,6 +92,9 @@ export async function getDoctors(
 ) {
     const res = await request<API.BackendResult>(`${baseUrl}/doctor/all`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -95,6 +116,9 @@ export async function getDoctorNumbers(
 ) {
     const res = await request<API.BackendResult>(`${baseUrl}/statistics/doctors`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -110,6 +134,9 @@ export async function getPatientNumbers(
 ) {
     const res = await request<API.BackendResult>(`${baseUrl}/statistics/patients`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -125,6 +152,9 @@ export async function getAdminNumbers(
 ) {
     const res = await request<API.BackendResult>(`${baseUrl}/statistics/admins`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -140,6 +170,9 @@ export async function getUserNumbers(
 ) {
     const res = await request<API.BackendResult>(`${baseUrl}/statistics/users`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -155,6 +188,9 @@ export async function getAPINumbers(
 ) {
     const res = await request<API.BackendResult>(`${baseUrl}/statistics/apicounts`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -170,6 +206,9 @@ export async function getAPISuccessNumbers(
 ) {
     const res = await request<API.BackendResult>(`${baseUrl}/statistics/apicounts/SUCCESS`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -185,6 +224,9 @@ export async function getAPIFailNumbers(
 ) {
     const res = await request<API.BackendResult>(`${baseUrl}/statistics/apicounts/FAILURE`, {
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -199,6 +241,9 @@ export async function getAPIFailNumbers(
 export async function updateRule(options?: { [key: string]: any }) {
     return request<API.RuleListItem>('/api/rule', {
         method: 'PUT',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
@@ -211,6 +256,9 @@ export async function addDoctor(
     return request<API.BackendResult>(`${baseUrl}/doctor`, {
         method: 'POST',
         params: body,
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
@@ -223,6 +271,9 @@ export async function deleteDoctor(
     return request<API.BackendResult>(`${baseUrl}/doctor`, {
         method: 'DELETE',
         params: body,
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
 }
