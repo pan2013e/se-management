@@ -6,6 +6,7 @@ import { history } from 'umi';
 import Footer from '@/components/Footer';
 import CaptchaInput from "@/components/CaptchaInput";
 import {login, logout, patientRegister, getCaptcha} from '@/services/ant-design-pro/api';
+import qs from 'qs';
 
 import styles from './index.less';
 
@@ -79,7 +80,10 @@ const Login: React.FC = () => {
                     message.success('登录成功');
                     localStorage.setItem('userName', msg.data.userName);
                     localStorage.setItem('token', msg.data.token);
-                    history.push('/welcome');
+                    const { redir } = qs.parse(window.location.href.split('?')[1]);
+                    if(redir != null) {
+                        window.location.href=`http://${decodeURIComponent(redir as string)}?userName=${encodeURIComponent(msg.data.userName)}&token=${encodeURIComponent(msg.data.token)}`;
+                    }
                 } else {
                     message.error(msg.message);
                 }
