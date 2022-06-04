@@ -43,7 +43,7 @@ const Welcome: React.FC = () => {
         <PageContainer
             content="欢迎使用管理员系统"
         >
-          <ProCard title="个人主页" split="vertical" style={{maxHeight:1000}}>
+          <ProCard split="vertical" style={{maxHeight:1000}}>
 
             <ProCard title="管理员 " colSpan="30%" >
               <div>
@@ -84,64 +84,6 @@ const Welcome: React.FC = () => {
             </ProCard>
 
           </ProCard>
-
-      {/*<Card title="欢迎" style={{maxHeight:1200}}>*/}
-      {/*  <Card style={{maxHeight:200}}>*/}
-      {/*    管理员*/}
-
-      {/*  </Card>*/}
-      {/*  <Card title="doctor" style={{maxHeight:300}}>*/}
-      {/*    我是张三，我不听话*/}
-      {/*  </Card>*/}
-      {/*  <Card title="patient" style={{maxHeight:200}}>*/}
-      {/*    我是李四，我不吃药*/}
-      {/*  </Card>*/}
-      {/*</Card>*/}
-
-
-      {/*<Card>*/}
-      {/*  <Alert*/}
-      {/*    message={intl.formatMessage({*/}
-      {/*      id: 'pages.welcome.alertMessage',*/}
-      {/*      defaultMessage: 'Faster and stronger heavy-duty components have been released.',*/}
-      {/*    })}*/}
-      {/*    type="success"*/}
-      {/*    showIcon*/}
-      {/*    banner*/}
-      {/*    style={{*/}
-      {/*      margin: -12,*/}
-      {/*      marginBottom: 24,*/}
-      {/*    }}*/}
-      {/*  />*/}
-      {/*  <Typography.Text strong>*/}
-      {/*    <FormattedMessage id="pages.welcome.advancedComponent" defaultMessage="Advanced Form" />{' '}*/}
-      {/*    <a*/}
-      {/*      href="https://procomponents.ant.design/components/table"*/}
-      {/*      rel="noopener noreferrer"*/}
-      {/*      target="__blank"*/}
-      {/*    >*/}
-      {/*      <FormattedMessage id="pages.welcome.link" defaultMessage="Welcome" />*/}
-      {/*    </a>*/}
-      {/*  </Typography.Text>*/}
-      {/*  <CodePreview>yarn add @ant-design/pro-table</CodePreview>*/}
-      {/*  <Typography.Text*/}
-      {/*    strong*/}
-      {/*    style={{*/}
-      {/*      marginBottom: 12,*/}
-      {/*    }}*/}
-      {/*  >*/}
-      {/*    <FormattedMessage id="pages.welcome.advancedLayout" defaultMessage="Advanced layout" />{' '}*/}
-      {/*    <a*/}
-      {/*      href="https://procomponents.ant.design/components/layout"*/}
-      {/*      rel="noopener noreferrer"*/}
-      {/*      target="__blank"*/}
-      {/*    >*/}
-      {/*      <FormattedMessage id="pages.welcome.link" defaultMessage="Welcome" />*/}
-      {/*    </a>*/}
-      {/*  </Typography.Text>*/}
-      {/*  <CodePreview>yarn add @ant-design/pro-layout</CodePreview>*/}
-      {/*</Card>*/}
-
     </PageContainer>
 </div>
   );

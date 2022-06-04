@@ -97,14 +97,14 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             }
         },
         navTheme: "dark",
-        links: isDev
-            ? [
-                  <Link to="/~docs" key="docs">
-                      <BookOutlined />
-                      <span>业务组件文档</span>
-                  </Link>,
-              ]
-            : [],
+        // links: isDev
+        //     ? [
+        //           <Link to="/~docs" key="docs">
+        //               <BookOutlined />
+        //               <span>业务组件文档</span>
+        //           </Link>,
+        //       ]
+        //     : [],
         menuHeaderRender: undefined,
         // 自定义 403 页面
         // unAccessible: <div>unAccessible</div>,
