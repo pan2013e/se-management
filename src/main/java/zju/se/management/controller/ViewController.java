@@ -1,9 +1,11 @@
 package zju.se.management.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class ViewController {
 
     @RequestMapping(value = {
@@ -19,5 +21,10 @@ public class ViewController {
             "/undefined/**",
     })
     public String welcome() { return "welcome/index"; }
+
+    @RequestMapping(value = {
+            "/doctors"
+    })
+    public String doctors() { return "doctors/index"; }
 
 }

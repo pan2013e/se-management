@@ -6,9 +6,9 @@
         component: './user/Login',
     },
     {
-        path: '/welcome',
+        path: '/dashboard',
         name: 'welcome',
-        icon: 'smile',
+        icon: 'Dashboard',
         component: './Welcome',
     },
     {

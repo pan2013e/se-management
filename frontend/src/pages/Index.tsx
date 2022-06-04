@@ -25,7 +25,7 @@ const Index : React.FC = () => {
                             <br/>
                             医生查询
                             <br/>
-                            <a href={'/welcome'}>后台管理</a>
+                            <a href={'/dashboard'}>后台管理</a>
                         </div>
                     </div>
                 </Layout.Content>

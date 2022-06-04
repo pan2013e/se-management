@@ -135,6 +135,111 @@ export async function getDoctors(
     }
 }
 
+export async function getDoctorNumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/doctors`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
+export async function getPatientNumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/patients`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
+export async function getAdminNumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/admins`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
+export async function getUserNumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/users`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
+export async function getAPINumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/apicounts`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
+export async function getAPISuccessNumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/apicounts/SUCCESS`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
+export async function getAPIFailNumbers(
+    options?: { [key: string]: any },
+) {
+    const res = await request<API.BackendResult>(`${baseUrl}/statistics/apicounts/FAILURE`, {
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return undefined;
+    } else {
+        return res.data.number;
+    }
+}
+
 /** 新建规则 PUT /api/rule */
 export async function updateRule(options?: { [key: string]: any }) {
     return request<API.RuleListItem>('/api/rule', {
@@ -156,9 +261,13 @@ export async function addDoctor(
 }
 
 /** 删除规则 DELETE /api/rule */
-export async function removeRule(options?: { [key: string]: any }) {
-    return request<Record<string, any>>('/api/rule', {
+export async function deleteDoctor(
+    body: { [key: string]: any },
+    options?: { [key: string]: any }
+) {
+    return request<API.BackendResult>(`${baseUrl}/doctor`, {
         method: 'DELETE',
+        params: body,
         ...(options || {}),
     });
 }
