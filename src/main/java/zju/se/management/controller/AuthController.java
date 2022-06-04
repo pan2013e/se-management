@@ -1,5 +1,6 @@
 package zju.se.management.controller;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.*;
 import org.jetbrains.annotations.NotNull;
@@ -86,19 +87,17 @@ public class AuthController extends BaseController {
 
     @GetMapping("/verify")
     @ApiOperation(value = "鉴权，验证登录是否有效", notes = "[暂不可用]")
-    public Response<AccessControlResponseData> verify(HttpSession session, HttpServletResponse res) throws BaseException {
+    public Response<AccessControlResponseData> verify(
+            @RequestParam(value = "token") String token,
+            HttpServletResponse res) throws BaseException {
         res.setHeader("Cache-Control", "no-cache, no-store");
-//        if(session.getAttribute("token") == null) {
-//            throw new AuthErrorException("未登录");
-//        }
-//        String token = (String) session.getAttribute("token");
-//        DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
-//        String userName = decodedJWT.getClaim("userName").asString();
-//        User user = userService.getUserByName(userName);
-//        return ResponseOK(new AccessControlResponseData(userName, user.getRole().toString()), "验证成功");
-
-        // Mock data for debug use
-        return ResponseOK(new AccessControlResponseData("admin", "ADMIN"), "验证成功");
+        if(token == null || token.equals("")){
+            throw new AuthErrorException("未登录");
+        }
+        DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
+        String userName = decodedJWT.getClaim("userName").asString();
+        String role = decodedJWT.getClaim("role").asString();
+        return ResponseOK(new AccessControlResponseData(userName, role.toUpperCase()), "验证成功");
     }
 
     @GetMapping("/logout")
