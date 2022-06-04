@@ -22,4 +22,9 @@ public class ViewController {
     })
     public String welcome() { return "welcome/index"; }
 
+    @RequestMapping(value = {
+            "/doctors"
+    })
+    public String doctors() { return "doctors/index"; }
+
 }
