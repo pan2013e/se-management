@@ -4,7 +4,7 @@ const Logout : React.FC = () => {
 
     useEffect(() => {
         localStorage.clear();
-        window.location.href = '/index';
+        window.location.href = '/';
     }, []);
 
     return (<div/>);
