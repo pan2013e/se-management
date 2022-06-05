@@ -9,10 +9,11 @@ import { BookOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 import {createWebSocket} from "@/websocket";
 import {notification} from "antd";
+import {api} from '@/config';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/login';
-const webSocketPath = 'ws://localhost:3000/message';
+const webSocketPath = `ws://${api.host}:${api.port}/message`;
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
