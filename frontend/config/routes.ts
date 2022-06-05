@@ -1,6 +1,10 @@
 ﻿export default [
     {
-        title: '登录',
+        path: '/',
+        layout: false,
+        component: './Index'
+    },
+    {
         path: '/login',
         layout: false,
         component: './user/Login',
@@ -16,11 +20,6 @@
         icon: 'table',
         path: '/doctors',
         component: './TableList',
-    },
-    {
-        path: '/',
-        layout: false,
-        component: './Index'
     },
     {
         title: '404',
