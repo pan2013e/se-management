@@ -58,9 +58,9 @@ public class AuthController extends BaseController {
             if (!validationResult) {
                 throw new AuthErrorException("密码错误");
             }
-            String token = TokenUtil.getToken(userService.getUserByName(userName));
-            session.setAttribute("token", token);
-            return ResponseOK(new TokenResponseData(userName, token), "登录成功");
+            User user = userService.getUserByName(userName);
+            String token = TokenUtil.getToken(user);
+            return ResponseOK(new TokenResponseData(user.getId(), userName, token), "登录成功");
         }
     }
 
@@ -104,14 +104,9 @@ public class AuthController extends BaseController {
 
     @GetMapping("/logout")
     @ApiOperation(value = "用户登出", notes = "各系统可用")
-    public Response<?> logout(HttpSession session, HttpServletResponse res) {
-        res.setHeader("Cache-Control", "no-cache, no-store");
-        if(session.getAttribute("token") == null) {
-            session.invalidate();
-            return ResponseOK("登出成功");
-        } else{
-            return ResponseError("已经登出");
-        }
+    @Deprecated
+    public Response<?> logout() {
+        return ResponseOK("This api is deprecated");
     }
 
     @GetMapping("/captcha")
