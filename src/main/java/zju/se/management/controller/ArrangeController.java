@@ -58,7 +58,7 @@ public class ArrangeController extends BaseController {
             throw new BaseException("时间格式错误");
         }
         arrange.setDayType(Arrange.dayEnum.valueOf(dayType.toUpperCase()));
-        arrangeService.addArrange(arrange);
+        arrangeService.addArrange(id, arrange);
         return ResponseOK("添加成功");
     }
 

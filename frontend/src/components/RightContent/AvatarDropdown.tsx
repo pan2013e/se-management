@@ -8,6 +8,7 @@ import styles from './index.less';
 import { logout } from '@/services/ant-design-pro/api';
 import type { MenuInfo } from 'rc-menu/lib/interface';
 import crypto from 'crypto';
+import {api} from '@/config';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -25,7 +26,7 @@ const loginOut = async () => {
     history.replace({
       pathname: '/login',
       search: stringify({
-        redirect: pathname + search,
+        redir: `${api.host}:${api.port}` + pathname + search,
       }),
     });
   }

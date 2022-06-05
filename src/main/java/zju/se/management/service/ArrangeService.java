@@ -72,7 +72,30 @@ public class ArrangeService {
         return list;
     }
 
-    public void addArrange(@NotNull Arrange arrange){
+    private boolean isOverlap(Date start, Date end, Date start2, Date end2) {
+        return start.compareTo(end2) < 0 || start2.compareTo(end) < 0;
+    }
+
+    private boolean isValid(int id, Arrange arrange) {
+        if (arrange.getStart_time().compareTo(arrange.getEnd_time()) > 0) {
+            return false;
+        }
+        List<Arrange> arranges = arrangeRepository.findAllByUserIdAndDayType(id, arrange.getDayType());
+        for (Arrange a : arranges) {
+            if(isOverlap(a.getStart_time(),a.getEnd_time(),arrange.getStart_time(),arrange.getEnd_time())){
+                return false;
+            }
+            if(a.getStart_time().equals(arrange.getStart_time()) && a.getEnd_time().equals(arrange.getEnd_time())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void addArrange(int id, @NotNull Arrange arrange){
+        if(!isValid(id,arrange)){
+            throw new IllegalArgumentException("非法区间");
+        }
         arrangeRepository.save(arrange);
     }
 
