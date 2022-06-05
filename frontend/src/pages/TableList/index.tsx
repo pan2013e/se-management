@@ -68,6 +68,7 @@ const TableList: React.FC = () => {
      */
   const [checkModalVisible, handleCheckModalVisible] = useState<boolean>(false) ;
   const actionRef = useRef<ActionType>();
+  const arrangeRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DoctorInfoItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.DoctorInfoItem[]>([]);
   const [popConfirm, setPopConfirm] = useState<boolean>(false);
@@ -83,11 +84,14 @@ const TableList: React.FC = () => {
   const getArrangeWrapper = async () => {
       const res = await getDoctorArrange(currentRow?.id as number);
       let ret : any = [];
-      if(!res.success) return ret;
+      if(!res.success) return {
+          data: ret,
+          success: false
+      };
       const table = res.data;
       for(let i = 0; i < table.length; i++) {
           const item = table[i];
-          for(let j = 0; j < item.length; j+= 2){
+          for(let j = 0; j < item.length; j += 2){
               ret.push({
                   dayType: i,
                   startTime: item[j],
@@ -95,8 +99,10 @@ const TableList: React.FC = () => {
               });
           }
       }
-      console.log(ret);
-      return ret;
+      return {
+          data: ret,
+          success: true
+      };
   };
 
     /**
@@ -180,6 +186,9 @@ const TableList: React.FC = () => {
             onClick={ ()=>{
                 setCurrentRow(record);
                 handleCheckModalVisible(true);
+                if (arrangeRef.current) {
+                    arrangeRef.current.reload();
+                }
             }}
         >
           查看排班
@@ -197,6 +206,7 @@ const TableList: React.FC = () => {
           valueType: 'textarea',
           renderText: (val: number) =>
               weekdays[val],
+          sorter: (a, b) => parseInt(a.dayType) - parseInt(b.dayType),
       },
       {
           title: '开始时间',
@@ -204,6 +214,7 @@ const TableList: React.FC = () => {
           valueType: 'textarea',
           renderText: (val: string) =>
               `${val}`,
+          sorter: (a, b) => parseInt(a.startTime) - parseInt(b.startTime),
       },
       {
           title: '结束时间',
@@ -211,6 +222,7 @@ const TableList: React.FC = () => {
           valueType: 'textarea',
           renderText: (val: string) =>
               `${val}`,
+          sorter: (a, b) => parseInt(a.endTime) - parseInt(b.endTime),
       },
   ];
 
@@ -441,6 +453,10 @@ const TableList: React.FC = () => {
             onFinishFailed={() => {
                 handleCheckModalVisible(false);
             }}
+            onFinish={ async (_) => {
+                handleCheckModalVisible(false);
+                return true;
+            }}
             visible={checkModalVisible}
             onVisibleChange={handleCheckModalVisible}
             >
@@ -448,6 +464,7 @@ const TableList: React.FC = () => {
                 search={false}
                 request={getArrangeWrapper}
                 columns={ArrangeColumns}
+                actionRef={arrangeRef}
             >
 
             </ProTable>
