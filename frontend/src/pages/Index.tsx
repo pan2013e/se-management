@@ -15,13 +15,25 @@ const Index : React.FC = () => {
             <Layout>
                 <Layout.Header>Header</Layout.Header>
                 <Layout.Content>
-                    <div style={{paddingLeft:20, display:"flex"}}>
-                        {isLogin && <div>欢迎您， {localStorage.getItem('userName')}</div>}
-                        {!isLogin && <><a href={'/login'}>请登录</a><br/></>}
+                    <div style={{paddingLeft:20, display:"flex", backgroundSize:30}}>
+                        {isLogin &&
+                            <div>
+                                <div style={{marginLeft:1220,marginTop:20}}>
+                                    用户： {localStorage.getItem('userName')}
+                                </div>
+                                <div style={{marginLeft:20,marginTop:20,scale:400} }>
+                                    欢迎使用医院线上预约平台！
+                                </div>
+                            </div>
+                        }
+                        {!isLogin &&
+                        <>
+                            <a href={'/login'}>请登录</a><br/>
+                        </>}
+                    </div>
+                </Layout.Content>
                         <div>
-                            <br/>
-                            <br/>
-                            <ProCard gutter={16} style={{ marginTop: 16 }}>
+                            <ProCard gutter={16} style={{ marginTop: 0, marginLeft: 0 }} layout={"center"}>
                                 <ProCard bordered>
                                     <Card
                                         cover={<img src={'https://static.thenounproject.com/png/60085-200.png'}/>}
@@ -68,8 +80,6 @@ const Index : React.FC = () => {
                             {/*<br/>*/}
                             {/*<a href={'/dashboard'}>后台管理</a>*/}
                         </div>
-                    </div>
-                </Layout.Content>
                 <Layout.Footer>
                     <Footer />
                 </Layout.Footer>
