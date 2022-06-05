@@ -65,7 +65,7 @@ const Login: React.FC = () => {
 
                 if (msg.code === 0) {
                     message.success('注册成功');
-                    history.push('/');
+                    history.push('/login');
                 } else {
                     message.error(msg.message);
                 }
@@ -80,9 +80,12 @@ const Login: React.FC = () => {
                     message.success('登录成功');
                     localStorage.setItem('userName', msg.data.userName);
                     localStorage.setItem('token', msg.data.token);
+                    localStorage.setItem('userId', msg.data.userId);
                     const { redir } = qs.parse(window.location.href.split('?')[1]);
                     if(redir != null) {
-                        window.location.href=`http://${decodeURIComponent(redir as string)}?userName=${encodeURIComponent(msg.data.userName)}&token=${encodeURIComponent(msg.data.token)}`;
+                        window.location.href=`http://${decodeURIComponent(redir as string)}?userId=${encodeURIComponent(msg.data.userId)}&userName=${encodeURIComponent(msg.data.userName)}&token=${encodeURIComponent(msg.data.token)}`;
+                    } else{
+                        history.push('/dashboard');
                     }
                 } else {
                     message.error(msg.message);
