@@ -22,6 +22,11 @@
         component: './TableList',
     },
     {
+        path: '/logout',
+        layout: false,
+        component: './user/Logout',
+    },
+    {
         title: '404',
         layout: false,
         component: './404'

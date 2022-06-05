@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ViewController {
 
     @RequestMapping(value = {
-            "/login",
-            "/login/**"
+            "/login"
     })
-    public String index() {
+    public String login() {
         return "login/index";
     }
 

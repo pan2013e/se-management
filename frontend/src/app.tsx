@@ -37,7 +37,7 @@ export async function getInitialState(): Promise<{
             });
             if(msg.code < 0){
                 localStorage.clear();
-                if(history.location.pathname !== loginPath && history.location.pathname !== '/'){
+                if(history.location.pathname !== '/'){
                     history.push(loginPath);
                 }
             } else {
@@ -50,7 +50,7 @@ export async function getInitialState(): Promise<{
         return undefined;
     };
     // 如果不是登录页面，执行
-    if (history.location.pathname !== loginPath && history.location.pathname !== '/') {
+    if (history.location.pathname !== loginPath) {
         const currentUser = await fetchUserInfo();
         const offlineNotices = await getNotices(currentUser?.userName);
         if(offlineNotices.code === 0 && offlineNotices.data.mqList.length > 0){
