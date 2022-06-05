@@ -25,4 +25,9 @@ public class ViewController {
     })
     public String doctors() { return "doctors/index"; }
 
+    @RequestMapping(value = {
+            "/logout"
+    })
+    public String logout() { return "logout/index"; }
+
 }

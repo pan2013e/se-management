@@ -52,25 +52,27 @@ export async function getInitialState(): Promise<{
     // 如果不是登录页面，执行
     if (history.location.pathname !== loginPath) {
         const currentUser = await fetchUserInfo();
-        const offlineNotices = await getNotices(currentUser?.userName);
-        if(offlineNotices.code === 0 && offlineNotices.data.mqList.length > 0){
-            for(let i = 0; i < offlineNotices.data.mqList.length; i++){
+        if(history.location.pathname === '/') {
+            const offlineNotices = await getNotices(currentUser?.userName);
+            if (offlineNotices.code === 0 && offlineNotices.data.mqList.length > 0) {
+                for (let i = 0; i < offlineNotices.data.mqList.length; i++) {
+                    notification['info']({
+                        message: `未读消息: ${offlineNotices.data.mqList[i].title}`,
+                        description: offlineNotices.data.mqList[i].content,
+                        duration: 0,
+                    });
+                }
+            }
+            const ws = createWebSocket(`${webSocketPath}/${currentUser?.userName}`);
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
                 notification['info']({
-                    message: `未读消息: ${offlineNotices.data.mqList[i].title}`,
-                    description: offlineNotices.data.mqList[i].content,
+                    message: data.title,
+                    description: data.content,
                     duration: 0,
                 });
-            }
+            };
         }
-        const ws = createWebSocket(`${webSocketPath}/${currentUser?.userName}`);
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            notification['info']({
-                message: data.title,
-                description: data.content,
-                duration: 0,
-            });
-        };
         return {
             fetchUserInfo,
             currentUser,
@@ -95,19 +97,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         footerRender: () => <Footer />,
         onPageChange: () => {
             const { location } = history;
-            if (!initialState?.currentUser && location.pathname !== loginPath) {
+            if (!initialState?.currentUser && location.pathname !== loginPath && location.pathname !== '/') {
                 history.push(loginPath);
             }
         },
         navTheme: "dark",
-        // links: isDev
-        //     ? [
-        //           <Link to="/~docs" key="docs">
-        //               <BookOutlined />
-        //               <span>业务组件文档</span>
-        //           </Link>,
-        //       ]
-        //     : [],
         menuHeaderRender: undefined,
         // 自定义 403 页面
         // unAccessible: <div>unAccessible</div>,
