@@ -11,10 +11,13 @@ const baseUrl = `${api.protocol}://${api.host}:${api.port}${api.prefix}`;
  * @param body
  * @param options
  */
-export async function addArrange(body:{[key: string]:any}, options?:{[key:string]:any }) {
+export async function addArrange(body: {[key: string]:any}, options?:{[key:string]:any }) {
     return request<API.BackendResult>(`${baseUrl}/arrange`, {
         method: 'POST' ,
         params: body ,
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...( options || {} ),
     })
 }
@@ -24,6 +27,9 @@ export async function addArrange(body:{[key: string]:any}, options?:{[key:string
 export async function getArrangeInfo(options?: { [key: string]: any }) {
     return request<API.BackendResult>(`${baseUrl}/arrange`, {
         method: 'GET' ,
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...( options || {} ),
     })
 }
@@ -31,9 +37,12 @@ export async function getArrangeInfo(options?: { [key: string]: any }) {
 /**
  * 获取某个医生的排班数据
  */
-export async function getDoctorArrange(id:number, options?:{[key:string]:any}) {
+export async function getDoctorArrange(id : number, options?:{[key:string]:any}) {
     const res = await request<API.BackendResult>(`${baseUrl}/arrange/${id}`,{
         method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
         ...(options || {}),
     });
     if(res.code < 0){
@@ -44,7 +53,7 @@ export async function getDoctorArrange(id:number, options?:{[key:string]:any}) {
         };
     } else {
         return {
-            data: res.data.arranges as string[][],
+            data: res.data.arranges,
             success: true
         };
     }
