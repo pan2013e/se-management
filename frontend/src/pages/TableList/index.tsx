@@ -1,14 +1,18 @@
 import {HomeOutlined, HeartOutlined, LockOutlined, PlusOutlined, UserOutlined} from '@ant-design/icons';
-import { Button, message, Popconfirm } from 'antd';
-import React, { useState, useRef } from 'react';
-import { useIntl, FormattedMessage } from 'umi';
+import {Button, message, FormInstance, TimePicker, Select} from 'antd';
+import React, {useState, useRef, useEffect} from 'react';
+import { FormattedMessage } from 'umi';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText } from '@ant-design/pro-form';
+import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
+import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
+import ProDescriptions from '@ant-design/pro-descriptions';
 import type { FormValueType } from './components/UpdateForm';
-import { addDoctor, updateRule, getDoctors, deleteDoctor } from '@/services/ant-design-pro/api';
+import UpdateForm from './components/UpdateForm';
+import {addDoctor, removeRule, getDoctors, addArrange, getDoctorArrange} from '@/services/ant-design-pro/api';
 import styles from "@/pages/user/Login/index.less";
+import {Moment} from "moment";
 
 
 const handleAdd = async (fields: API.DoctorInfoItem) => {
@@ -21,17 +25,26 @@ const handleAdd = async (fields: API.DoctorInfoItem) => {
         return false;
     }
 };
-
-const handleUpdate = async (fields: FormValueType) => {
+const handleCheck = async (id : number )=>{
+    const res = await getDoctorArrange(id) ;
+    if ( res.code === 0 ) {
+        message.success('查询成功');
+        return true;
+    }else {
+        message.error(res.message);
+        return false;
+    }
+};
+const handleArrange = async (fields: API.ArrangeInfoItem) => {
   const hide = message.loading('Configuring');
   try {
-    await updateRule({
-      name: fields.name,
-      desc: fields.desc,
-      key: fields.key,
+    await addArrange({
+      id: fields.id,
+      startTime: fields.startTime,
+      endTime: fields.endTime,
+      dayType: fields.dayType
     });
     hide();
-
     message.success('Configuration is successful');
     return true;
   } catch (error) {
@@ -42,17 +55,20 @@ const handleUpdate = async (fields: FormValueType) => {
 };
 
 const handleRemove = async (selectedRows: API.DoctorInfoItem[]) => {
-    if (!selectedRows) return true;
-    const res = await deleteDoctor({
-        id: selectedRows.map((row) => row.id)
+  const hide = message.loading('正在删除');
+  if (!selectedRows) return true;
+  try {
+    await removeRule({
+      key: selectedRows.map((row) => row.key),
     });
-    if(res.code === 0){
-        message.success('删除成功');
-        return true;
-    } else {
-        message.error(res.message);
-        return false;
-    }
+    hide();
+    message.success('Deleted successfully and will refresh soon');
+    return true;
+  } catch (error) {
+    hide();
+    message.error('Delete failed, please try again');
+    return false;
+  }
 };
 
 const TableList: React.FC = () => {
@@ -66,19 +82,39 @@ const TableList: React.FC = () => {
    * @zh-CN 分布更新窗口的弹窗
    * */
   const [updateModalVisible, handleUpdateModalVisible] = useState<boolean>(false);
-
+    /**
+     * 查看排班表的表单
+     */
+  const [checkModalVisible, handleCheckModalVisible] = useState<boolean>(false) ;
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DoctorInfoItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.DoctorInfoItem[]>([]);
-  const [popConfirm, setPopConfirm] = useState<boolean>(false);
 
-  const handlePopConfirmCancel = () => {
-      setPopConfirm(false);
-  };
+    /**
+     * 添加排班时刷新表单的默认项
+     */
+  const FormRef = useRef<FormInstance>(null);
+  useEffect( ()=>{
+      FormRef && FormRef.current && FormRef.current.resetFields() ;
+  },[currentRow]) ;
 
-  const handlePopConfirmOpen = () => {
-      setPopConfirm(true);
-  };
+  /**
+   * 收集表单中的时间
+   */
+  type day = 'Monday'|'TuesDay'|'Wednesday'|'Thursday'|'Friday'|'Saturday'|'Sunday' ;
+  const [day_Type,setDayType]= useState<day>('Monday') ;
+  const [start_Time,setStartTime] = useState<string>('null');
+  const [end_Time,setEndTime] = useState<string>('null');
+  const timeFormat = 'HH:mm:ss' ;
+
+    const onStartChange = (time: Moment|null, timeString: string) => {
+        setStartTime(timeString);
+        // console.log(time, timeString);
+    };
+    const onEndChange = (time: Moment|null, timeString: string) => {
+        setEndTime(timeString);
+        // console.log(time, timeString);
+    };
 
   const columns: ProColumns<API.DoctorInfoItem>[] = [
     {
@@ -124,14 +160,20 @@ const TableList: React.FC = () => {
         <a
           key="config"
           onClick={() => {
-            handleUpdateModalVisible(true);
-            setCurrentRow(record);
+              setCurrentRow(record);
+              handleUpdateModalVisible(true);
           }}
         >
-          查看排班
+          添加排班
         </a>,
-        <a key="subscribeAlert" href="https://procomponents.ant.design/">
-          修改排班
+        <a
+            key="subscribeAlert"
+            onClick={ ()=>{
+                setCurrentRow(record);
+                handleCheckModalVisible(true);
+            }}
+        >
+          查看排班
         </a>,
       ],
     },
@@ -165,7 +207,6 @@ const TableList: React.FC = () => {
       />
       {selectedRowsState?.length > 0 && (
         <FooterToolbar
-
           extra={
             <div>
               已选择{' '}
@@ -174,21 +215,15 @@ const TableList: React.FC = () => {
             </div>
           }
         >
-            <Popconfirm
-                title="确认删除?"
-                placement="topRight"
-                visible={popConfirm}
-                onConfirm={async () => {
-                    await handleRemove(selectedRowsState);
-                    setSelectedRows([]);
-                    actionRef.current?.reloadAndRest?.();
-                }}
-                onCancel={handlePopConfirmCancel}
-            >
-                <Button type="primary" onClick={handlePopConfirmOpen}>
-                    删除
-                </Button>
-            </Popconfirm>
+          <Button
+            onClick={async () => {
+              await handleRemove(selectedRowsState);
+              setSelectedRows([]);
+              actionRef.current?.reloadAndRest?.();
+            }}
+          >
+            批量删除
+          </Button>
         </FooterToolbar>
       )}
       <ModalForm
@@ -281,10 +316,16 @@ const TableList: React.FC = () => {
             ]}
         />
       </ModalForm>
+
       <ModalForm
         onFinish={async (value) => {
           console.log(value);
-          const success = await handleUpdate(value);
+          const success = await handleArrange({
+              id:(currentRow && currentRow.id ) ,
+              startTime:start_Time,
+              endTime:end_Time,
+              dayType:day_Type
+          });
           if (success) {
             handleUpdateModalVisible(false);
             setCurrentRow(undefined);
@@ -298,9 +339,84 @@ const TableList: React.FC = () => {
         }}
         visible={updateModalVisible}
         onVisibleChange={handleUpdateModalVisible}
+        formRef={FormRef}
       >
+          <ProFormText
+              name="userName"
+              initialValue = { (currentRow !== undefined && currentRow.id ) || (currentRow===undefined && '')}
+              fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined className={styles.prefixIcon} />,
+              }}
+              placeholder="用户ID"
+              rules={[
+                  {
+                      required: true,
+                      message: '请输入用户名',
+                  },
+              ]}
+          />
+          <ProFormText
+              name="realName"
+              initialValue={ (currentRow !== undefined && currentRow.realName) || (currentRow===undefined && '')}
+              fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined className={styles.prefixIcon} />,
+              }}
+              placeholder="姓名"
+              rules={[
+                  {
+                      required: true,
+                      message: '请输入姓名',
+                  },
+              ]}
+          />
+          <Select value={day_Type} onChange={setDayType}>
+              <option value='Monday'>星期一</option>
+              <option value='Tuesday'>星期二</option>
+              <option value='Wednesday'>星期三</option>
+              <option value='Thursday'>星期四</option>
+              <option value='Friday'>星期五</option>
+              <option value='Saturday'>星期六</option>
+              <option value='Sunday'>星期日</option>
+          </Select>
+          <TimePicker
+              placeholder='开始时间'
+              format={timeFormat}
+              onChange={onStartChange}
+          />
+          <TimePicker
+              placeholder='结束时间'
+              format={timeFormat}
+              onChange={onEndChange}
+          />
 
       </ModalForm>
+
+        <ModalForm
+            onFinish={async (value) => {
+                console.log(value);
+                const success = await handleCheck(( currentRow !== undefined && currentRow.id ) || 0 );
+                if (success) {
+                    handleCheckModalVisible(false);
+                    setCurrentRow(undefined);
+                    if (actionRef.current) {
+                        actionRef.current.reload();
+                    }
+                }
+            }}
+            onFinishFailed={() => {
+                handleCheckModalVisible(false);
+            }}
+            visible={checkModalVisible}
+            onVisibleChange={handleCheckModalVisible}
+            >
+            <ProTable
+                request={getDoctorArrange(currentRow.id)}
+            >
+
+            </ProTable>
+        </ModalForm>
     </PageContainer>
   );
 };

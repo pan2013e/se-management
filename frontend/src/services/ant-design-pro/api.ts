@@ -6,6 +6,51 @@ import {message} from "antd";
 
 const baseUrl = `${api.protocol}://${api.host}:${api.port}${api.prefix}`;
 
+/**
+ * 添加预约
+ * @param body
+ * @param options
+ */
+export async function addArrange(body:{[key: string]:any}, options?:{[key:string]:any }) {
+    return request<API.BackendResult>(`${baseUrl}/arrange`, {
+        method: 'POST' ,
+        params: body ,
+        ...( options || {} ),
+    })
+}
+/**
+ * 获取全部排班的数据
+ */
+export async function getArrangeInfo(options?: { [key: string]: any }) {
+    return request<API.BackendResult>(`${baseUrl}/arrange`, {
+        method: 'GET' ,
+        ...( options || {} ),
+    })
+}
+
+/**
+ * 获取某个医生的排班数据
+ */
+export async function getDoctorArrange(id:number, options?:{[key:string]:any}) {
+    const res = await request<API.BackendResult>(`${baseUrl}/arrange/${id}`,{
+        method: 'GET',
+        ...(options || {}),
+    });
+    if(res.code < 0){
+        message.error(res.message);
+        return {
+            data: [],
+            success: false
+        };
+    } else {
+        return {
+            data: res.data.arranges as string[][],
+            success: true
+        };
+    }
+}
+
+
 /** 获取当前的用户 GET /api/oauth/verify */
 export async function currentUser(
     body: { [key: string]: any },

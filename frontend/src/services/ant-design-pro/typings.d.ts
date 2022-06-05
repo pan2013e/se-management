@@ -40,6 +40,13 @@ declare namespace API {
         success?: boolean;
     };
 
+    type ArrangeInfoItem = {
+        id?:number;
+        startTime?:string;
+        endTime?:string;
+        dayType?:string;
+    };
+
     type DoctorInfoItem = {
         id?: number;
         userName?: string;
