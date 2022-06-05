@@ -1,16 +1,12 @@
 import {HomeOutlined, HeartOutlined, LockOutlined, PlusOutlined, UserOutlined} from '@ant-design/icons';
-import {Button, message, FormInstance, TimePicker, Select} from 'antd';
+import {Button, message, FormInstance, TimePicker, Select, Popconfirm} from 'antd';
 import React, {useState, useRef, useEffect} from 'react';
 import { FormattedMessage } from 'umi';
 import { PageContainer, FooterToolbar } from '@ant-design/pro-layout';
 import type { ProColumns, ActionType } from '@ant-design/pro-table';
 import ProTable from '@ant-design/pro-table';
-import { ModalForm, ProFormText, ProFormTextArea } from '@ant-design/pro-form';
-import type { ProDescriptionsItemProps } from '@ant-design/pro-descriptions';
-import ProDescriptions from '@ant-design/pro-descriptions';
-import type { FormValueType } from './components/UpdateForm';
-import UpdateForm from './components/UpdateForm';
-import {addDoctor, removeRule, getDoctors, addArrange, getDoctorArrange} from '@/services/ant-design-pro/api';
+import { ModalForm, ProFormText } from '@ant-design/pro-form';
+import { addDoctor, getDoctors, deleteDoctor, getDoctorArrange, addArrange } from '@/services/ant-design-pro/api';
 import styles from "@/pages/user/Login/index.less";
 import {Moment} from "moment";
 
@@ -25,50 +21,35 @@ const handleAdd = async (fields: API.DoctorInfoItem) => {
         return false;
     }
 };
-const handleCheck = async (id : number )=>{
-    const res = await getDoctorArrange(id) ;
-    if ( res.code === 0 ) {
-        message.success('查询成功');
+
+const handleArrange = async (fields: API.ArrangeInfoItem) => {
+    const res = await addArrange({
+      id: fields.id,
+      start_time: fields.startTime,
+      end_time: fields.endTime,
+      dayType: fields.dayType
+    });
+    if(res.code === 0){
+        message.success('添加成功');
         return true;
-    }else {
+    } else {
         message.error(res.message);
         return false;
     }
 };
-const handleArrange = async (fields: API.ArrangeInfoItem) => {
-  const hide = message.loading('Configuring');
-  try {
-    await addArrange({
-      id: fields.id,
-      startTime: fields.startTime,
-      endTime: fields.endTime,
-      dayType: fields.dayType
-    });
-    hide();
-    message.success('Configuration is successful');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Configuration failed, please try again!');
-    return false;
-  }
-};
 
 const handleRemove = async (selectedRows: API.DoctorInfoItem[]) => {
-  const hide = message.loading('正在删除');
-  if (!selectedRows) return true;
-  try {
-    await removeRule({
-      key: selectedRows.map((row) => row.key),
+    if (!selectedRows) return true;
+    const res = await deleteDoctor({
+        id: selectedRows.map((row) => row.id)
     });
-    hide();
-    message.success('Deleted successfully and will refresh soon');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('Delete failed, please try again');
-    return false;
-  }
+    if(res.code === 0){
+        message.success('删除成功');
+        return true;
+    } else {
+        message.error(res.message);
+        return false;
+    }
 };
 
 const TableList: React.FC = () => {
@@ -89,6 +70,34 @@ const TableList: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API.DoctorInfoItem>();
   const [selectedRowsState, setSelectedRows] = useState<API.DoctorInfoItem[]>([]);
+  const [popConfirm, setPopConfirm] = useState<boolean>(false);
+
+  const handlePopConfirmCancel = () => {
+      setPopConfirm(false);
+  };
+
+  const handlePopConfirmOpen = () => {
+      setPopConfirm(true);
+  };
+
+  const getArrangeWrapper = async () => {
+      const res = await getDoctorArrange(currentRow?.id as number);
+      let ret : any = [];
+      if(!res.success) return ret;
+      const table = res.data;
+      for(let i = 0; i < table.length; i++) {
+          const item = table[i];
+          for(let j = 0; j < item.length; j+= 2){
+              ret.push({
+                  dayType: i,
+                  startTime: item[j],
+                  endTime: item[j+1]
+              });
+          }
+      }
+      console.log(ret);
+      return ret;
+  };
 
     /**
      * 添加排班时刷新表单的默认项
@@ -179,6 +188,32 @@ const TableList: React.FC = () => {
     },
   ];
 
+  const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+  const ArrangeColumns = [
+      {
+          title: '日期',
+          dataIndex: 'dayType',
+          valueType: 'textarea',
+          renderText: (val: number) =>
+              weekdays[val],
+      },
+      {
+          title: '开始时间',
+          dataIndex: 'startTime',
+          valueType: 'textarea',
+          renderText: (val: string) =>
+              `${val}`,
+      },
+      {
+          title: '结束时间',
+          dataIndex: 'endTime',
+          valueType: 'textarea',
+          renderText: (val: string) =>
+              `${val}`,
+      },
+  ];
+
   return (
     <PageContainer>
       <ProTable<API.DoctorInfoItem>
@@ -215,15 +250,21 @@ const TableList: React.FC = () => {
             </div>
           }
         >
-          <Button
-            onClick={async () => {
-              await handleRemove(selectedRowsState);
-              setSelectedRows([]);
-              actionRef.current?.reloadAndRest?.();
-            }}
-          >
-            批量删除
-          </Button>
+            <Popconfirm
+                title="确认删除?"
+                placement="topRight"
+                visible={popConfirm}
+                onConfirm={async () => {
+                    await handleRemove(selectedRowsState);
+                    setSelectedRows([]);
+                    actionRef.current?.reloadAndRest?.();
+                }}
+                onCancel={handlePopConfirmCancel}
+            >
+                <Button type="primary" onClick={handlePopConfirmOpen}>
+                    删除
+                </Button>
+            </Popconfirm>
         </FooterToolbar>
       )}
       <ModalForm
@@ -318,8 +359,8 @@ const TableList: React.FC = () => {
       </ModalForm>
 
       <ModalForm
+        title='添加排班'
         onFinish={async (value) => {
-          console.log(value);
           const success = await handleArrange({
               id:(currentRow && currentRow.id ) ,
               startTime:start_Time,
@@ -332,10 +373,12 @@ const TableList: React.FC = () => {
             if (actionRef.current) {
               actionRef.current.reload();
             }
+            FormRef?.current?.resetFields();
           }
         }}
         onFinishFailed={() => {
           handleUpdateModalVisible(false);
+          FormRef?.current?.resetFields();
         }}
         visible={updateModalVisible}
         onVisibleChange={handleUpdateModalVisible}
@@ -352,7 +395,7 @@ const TableList: React.FC = () => {
               rules={[
                   {
                       required: true,
-                      message: '请输入用户名',
+                      message: '请输入用户ID',
                   },
               ]}
           />
@@ -394,17 +437,7 @@ const TableList: React.FC = () => {
       </ModalForm>
 
         <ModalForm
-            onFinish={async (value) => {
-                console.log(value);
-                const success = await handleCheck(( currentRow !== undefined && currentRow.id ) || 0 );
-                if (success) {
-                    handleCheckModalVisible(false);
-                    setCurrentRow(undefined);
-                    if (actionRef.current) {
-                        actionRef.current.reload();
-                    }
-                }
-            }}
+            title='查看排班'
             onFinishFailed={() => {
                 handleCheckModalVisible(false);
             }}
@@ -412,7 +445,9 @@ const TableList: React.FC = () => {
             onVisibleChange={handleCheckModalVisible}
             >
             <ProTable
-                request={getDoctorArrange(currentRow.id)}
+                search={false}
+                request={getArrangeWrapper}
+                columns={ArrangeColumns}
             >
 
             </ProTable>
