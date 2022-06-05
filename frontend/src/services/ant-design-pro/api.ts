@@ -13,7 +13,6 @@ export async function currentUser(
 ) {
     return request<API.BackendResult>(`${baseUrl}/oauth/verify`, {
         method: 'GET',
-        params: body,
         headers: {
             'token': localStorage.getItem('token') || '',
         },
