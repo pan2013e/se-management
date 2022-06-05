@@ -15,6 +15,7 @@ import zju.se.management.service.UserService;
 import zju.se.management.utils.*;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
@@ -80,24 +81,25 @@ public class AuthController extends BaseController {
             user.setRealName(realName);
             user.setPassword(CryptoUtil.encrypt(password));
             user.setRole(User.userType.PATIENT);
-            userService.addUser(user);
+            userService. addUser(user);
             return ResponseOK("注册成功");
         }
     }
 
     @GetMapping("/verify")
-    @ApiOperation(value = "鉴权，验证登录是否有效", notes = "[暂不可用]")
+    @ApiOperation(value = "鉴权，验证登录是否有效")
     public Response<AccessControlResponseData> verify(
-            @RequestParam(value = "token") String token,
-            HttpServletResponse res) throws BaseException {
+            HttpServletRequest req, HttpServletResponse res) throws BaseException {
         res.setHeader("Cache-Control", "no-cache, no-store");
+        String token = req.getHeader("token");
         if(token == null || token.equals("")){
             throw new AuthErrorException("未登录");
         }
         DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
         String userName = decodedJWT.getClaim("userName").asString();
         String role = decodedJWT.getClaim("role").asString();
-        return ResponseOK(new AccessControlResponseData(userName, role.toUpperCase()), "验证成功");
+        int userId = decodedJWT.getClaim("id").asInt();
+        return ResponseOK(new AccessControlResponseData(userId, userName, role.toUpperCase()), "验证成功");
     }
 
     @GetMapping("/logout")
