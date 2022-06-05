@@ -20,9 +20,9 @@ export type GlobalHeaderRightProps = {
 const loginOut = async () => {
   await logout();
   const { query = {}, search, pathname } = history.location;
-  const { redirect } = query;
+  const { redir } = query;
   // Note: There may be security issues, please note
-  if (window.location.pathname !== '/login' && !redirect) {
+  if (window.location.pathname !== '/login' && !redir) {
     history.replace({
       pathname: '/login',
       search: stringify({
@@ -43,7 +43,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
         loginOut();
         return;
       }
-      history.push(`/account/${key}`);
+      history.push(`/dashboard`);
     },
     [setInitialState],
   );

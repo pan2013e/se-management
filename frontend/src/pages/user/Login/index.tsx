@@ -6,6 +6,7 @@ import { history } from 'umi';
 import Footer from '@/components/Footer';
 import CaptchaInput from "@/components/CaptchaInput";
 import {login, logout, patientRegister, getCaptcha} from '@/services/ant-design-pro/api';
+import {api} from '@/config';
 import qs from 'qs';
 
 import styles from './index.less';
@@ -46,7 +47,7 @@ const Login: React.FC = () => {
     const handleSubmit = async (values: Record<string, any>) => {
         if (isLogin && type === 'login') {
             await logout();
-            history.push('/');
+            window.location.href=`http://${api.host}:${api.port}/`;
             return;
         }
         if(captchaCode.length === 0){
@@ -85,7 +86,7 @@ const Login: React.FC = () => {
                     if(redir != null) {
                         window.location.href=`http://${decodeURIComponent(redir as string)}?userId=${encodeURIComponent(msg.data.userId)}&userName=${encodeURIComponent(msg.data.userName)}&token=${encodeURIComponent(msg.data.token)}`;
                     } else{
-                        history.push('/dashboard');
+                        window.location.href=`http://${api.host}:${api.port}/`;
                     }
                 } else {
                     message.error(msg.message);
@@ -246,7 +247,7 @@ const Login: React.FC = () => {
                                     },
                                     ({ getFieldValue }) => ({
                                         validator(_, value) {
-                                            if (!value || getFieldValue('password') == value) {
+                                            if (!value || getFieldValue('regPassword') == value) {
                                                 return Promise.resolve();
                                             }
                                             return Promise.reject('两次密码输入不一致');
