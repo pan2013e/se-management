@@ -1,8 +1,10 @@
 import React from "react";
-import { Layout } from 'antd';
+import {Card, Layout} from 'antd';
 import Footer from '../components/Footer';
 
 import styles from './Index.less';
+import ProCard from "@ant-design/pro-card";
+import Meta from "antd/es/card/Meta";
 
 const Index : React.FC = () => {
     const isLogin =
@@ -17,15 +19,54 @@ const Index : React.FC = () => {
                         {isLogin && <div>欢迎您， {localStorage.getItem('userName')}</div>}
                         {!isLogin && <><a href={'/login'}>请登录</a><br/></>}
                         <div>
-                            挂号系统
                             <br/>
-                            药房系统
                             <br/>
-                            医生系统
-                            <br/>
-                            医生查询
-                            <br/>
-                            <a href={'/dashboard'}>后台管理</a>
+                            <ProCard gutter={16} style={{ marginTop: 16 }}>
+                                <ProCard bordered>
+                                    <Card
+                                        cover={<img src={'https://static.thenounproject.com/png/60085-200.png'}/>}
+                                    >
+                                        <Meta title="挂号系统" description={<a href={''}>www.instagram.com</a> }/>
+                                    </Card>
+                                </ProCard>
+                                <ProCard bordered>
+                                    <Card
+                                        cover={<img src={'https://www.logosc.cn/oss/icons/2022/03/18/45dd54a444e8ab26f76e36c49c90e443.png'}/>}
+                                    >
+                                        <Meta title="药房系统" description={<a href={''}>www.instagram.com</a> }/>
+                                    </Card>
+                                </ProCard>
+                                <ProCard bordered>
+                                    <Card
+                                        cover={<img src={'https://www.logosc.cn/oss/icons/2021/10/21/be754e390d381f33279c01afde5d35fd.png'}/>}
+                                    >
+                                        <Meta title="医生系统" description={<a href={''}>www.instagram.com</a> }/>
+                                    </Card>
+                                </ProCard>
+                                <ProCard bordered>
+                                    <Card
+                                        cover={<img src={'https://www.logosc.cn/oss/icons/2021/11/28/4b592fb988813c74734cd9603e33d031.png'}/>}
+                                    >
+                                        <Meta title="医生查询" description={<a href={''}>www.instagram.com</a> }/>
+                                    </Card>
+                                </ProCard>
+                                <ProCard bordered>
+                                    <Card
+                                        cover={<img src={'https://www.logosc.cn/oss/icons/2022/04/16/fda47417528b0b161cfd10eff07eba6c.png'}/>}
+                                    >
+                                        <Meta title={<a href={'/dashboard'}>后台管理</a>} description={<a href={'/dashboard'}>./dashboard</a>}/>
+                                    </Card>
+                                </ProCard>
+                            </ProCard>
+                            {/*挂号系统*/}
+                            {/*<br/>*/}
+                            {/*药房系统*/}
+                            {/*<br/>*/}
+                            {/*医生系统*/}
+                            {/*<br/>*/}
+                            {/*医生查询*/}
+                            {/*<br/>*/}
+                            {/*<a href={'/dashboard'}>后台管理</a>*/}
                         </div>
                     </div>
                 </Layout.Content>
