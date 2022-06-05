@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 public class ViewController {
 
     @RequestMapping(value = {
@@ -17,10 +17,9 @@ public class ViewController {
     }
 
     @RequestMapping(value = {
-            "/welcome/**",
-            "/undefined/**",
+            "/dashboard",
     })
-    public String welcome() { return "welcome/index"; }
+    public String welcome() { return "dashboard/index"; }
 
     @RequestMapping(value = {
             "/doctors"

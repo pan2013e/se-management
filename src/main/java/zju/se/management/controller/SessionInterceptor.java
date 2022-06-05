@@ -14,11 +14,9 @@ import java.io.PrintWriter;
 @Component
 public class SessionInterceptor implements HandlerInterceptor {
 
-    private boolean intercept(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    private boolean intercept(HttpServletRequest req, HttpServletResponse res) {
         if(isApi(req)) {
             jsonResponse("{\"code\":-1,\"data\":null,\"message\":\"未登录\"}", res);
-        } else {
-            res.sendRedirect("/login");
         }
         return false;
     }
@@ -42,13 +40,11 @@ public class SessionInterceptor implements HandlerInterceptor {
             return true;
         }
         String token = req.getHeader("token");
-        System.out.println(token);
         if(token == null) {
             return intercept(req, res);
         } else {
             try {
                 TokenUtil.decodeToken(token);
-                System.out.println("token is valid");
             } catch (Exception e) {
                 return intercept(req, res);
             }
