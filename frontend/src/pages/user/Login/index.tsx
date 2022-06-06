@@ -18,6 +18,16 @@ const Login: React.FC = () => {
     const [captchaKey, setCaptchaKey] = useState<string>('');
     const [captchaImage, setCaptchaImage] = useState<string>('');
     const [captchaCode, setCaptchaCode] = useState<string>('');
+    const { redir } = qs.parse(window.location.href.split('?')[1]);
+
+    useEffect(() => {
+        if (isLogin && redir != null) {
+            message.info("您已登录，将跳转至原页面");
+            setTimeout(()=>{
+                window.location.href=`http://${decodeURIComponent(redir as string)}?userId=${encodeURIComponent(localStorage.getItem('userId') || '')}&userName=${encodeURIComponent(localStorage.getItem('userName') || '')}&token=${encodeURIComponent(localStorage.getItem('token') || '')}`;
+            }, 2000);
+        }
+    }, []);
 
     useEffect(()=>{
         getCaptcha().then(res => {
@@ -82,7 +92,6 @@ const Login: React.FC = () => {
                     localStorage.setItem('userName', msg.data.userName);
                     localStorage.setItem('token', msg.data.token);
                     localStorage.setItem('userId', msg.data.userId);
-                    const { redir } = qs.parse(window.location.href.split('?')[1]);
                     if(redir != null) {
                         window.location.href=`http://${decodeURIComponent(redir as string)}?userId=${encodeURIComponent(msg.data.userId)}&userName=${encodeURIComponent(msg.data.userName)}&token=${encodeURIComponent(msg.data.token)}`;
                     } else{
