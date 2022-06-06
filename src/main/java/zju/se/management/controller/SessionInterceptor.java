@@ -32,6 +32,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         res.setHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS");
         res.setHeader("Access-Control-Max-Age", "86400");
         res.setHeader("Access-Control-Allow-Headers", "*");
+        res.setHeader("Access-Control-Allow-Private-Network", "*");
 
         if(req.getMethod().equalsIgnoreCase("OPTIONS")) {
             return true;
