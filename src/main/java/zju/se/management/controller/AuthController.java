@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -31,15 +32,64 @@ import java.util.concurrent.TimeUnit;
 @ResponseStatus(HttpStatus.OK)
 @Api(protocols = "http", consumes = "application/json", produces = "application/json", tags = "认证接口")
 public class AuthController extends BaseController {
+
     private final Producer captchaProducer;
     private final UserService userService;
     private final StringRedisTemplate redisTemplate;
+
+    private final String JWT_NAMESPACE = "jwt:";
 
     @Autowired
     public AuthController(UserService userService, Producer captchaProducer, StringRedisTemplate redisTemplate) {
         this.userService = userService;
         this.captchaProducer = captchaProducer;
         this.redisTemplate = redisTemplate;
+    }
+
+    private String getJwtKey(String key) {
+        return JWT_NAMESPACE + key;
+    }
+
+    private void addToWhitelist(String token) {
+        try {
+            Date expiry = TokenUtil.getExpireDate(token);
+            long expirySeconds = expiry.getTime() / 1000;
+            long currentSeconds = System.currentTimeMillis() / 1000;
+            assert(expirySeconds >= currentSeconds);
+            redisTemplate.opsForValue()
+                    .set(getJwtKey(TokenUtil.getSignature(token)),
+                            token, expirySeconds - currentSeconds, TimeUnit.SECONDS);
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    public boolean checkWhitelist(String token) {
+        try {
+            String key = getJwtKey(TokenUtil.getSignature(token));
+            if(Boolean.FALSE.equals(redisTemplate.hasKey(key))) {
+                return false;
+            }
+            String storedToken = redisTemplate.opsForValue().get(key);
+            if(storedToken != null && storedToken.equals(token)) {
+                return true;
+            }
+        } catch (Exception ignored) {
+
+        }
+        return false;
+    }
+
+    private void removeFromWhitelist(String token) {
+        try {
+            String key = getJwtKey(TokenUtil.getSignature(token));
+            if(Boolean.FALSE.equals(redisTemplate.hasKey(key))) {
+                return;
+            }
+            redisTemplate.expire(key, 0, TimeUnit.SECONDS);
+        } catch (Exception ignored){
+
+        }
     }
 
     @PostMapping("/login")
@@ -59,6 +109,7 @@ public class AuthController extends BaseController {
             }
             User user = userService.getUserByName(userName);
             String token = TokenUtil.getToken(user);
+            addToWhitelist(token);
             return ResponseOK(new TokenResponseData(user.getId(), userName, token), "登录成功");
         }
     }
@@ -80,7 +131,7 @@ public class AuthController extends BaseController {
             user.setRealName(realName);
             user.setPassword(CryptoUtil.encrypt(password));
             user.setRole(User.userType.PATIENT);
-            userService. addUser(user);
+            userService.addUser(user);
             return ResponseOK("注册成功");
         }
     }
@@ -92,7 +143,7 @@ public class AuthController extends BaseController {
         return async(() -> {
             res.setHeader("Cache-Control", "no-cache, no-store");
             String token = req.getHeader("token");
-            if(token == null || token.equals("")){
+            if(token == null || token.equals("") || !checkWhitelist(token)) {
                 throw new AuthErrorException("未登录");
             }
             DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
@@ -106,8 +157,10 @@ public class AuthController extends BaseController {
     @GetMapping("/logout")
     @ApiOperation(value = "用户登出", notes = "各系统可用")
     @Deprecated
-    public Response<?> logout() {
-        return ResponseOK("This api is deprecated");
+    public Response<?> logout(HttpServletRequest req) {
+        String token = req.getHeader("token");
+        removeFromWhitelist(token);
+        return ResponseOK("登出成功");
     }
 
     @GetMapping("/captcha")

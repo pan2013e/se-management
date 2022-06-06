@@ -1,10 +1,10 @@
 package zju.se.management.controller;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import zju.se.management.authentication.TokenUtil;
+import zju.se.management.controller.AuthController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +13,9 @@ import java.io.PrintWriter;
 
 @Component
 public class SessionInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private AuthController authController;
 
     private boolean intercept(HttpServletRequest req, HttpServletResponse res) {
         if(isApi(req)) {
@@ -45,12 +48,11 @@ public class SessionInterceptor implements HandlerInterceptor {
             return intercept(req, res);
         } else {
             try {
-                TokenUtil.decodeToken(token);
+                return authController.checkWhitelist(token);
             } catch (Exception e) {
                 return intercept(req, res);
             }
         }
-        return true;
     }
 
     protected boolean isApi(@NotNull HttpServletRequest req) {
