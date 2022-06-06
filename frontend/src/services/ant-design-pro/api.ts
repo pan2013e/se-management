@@ -78,7 +78,13 @@ export async function currentUser(
 export async function logout(
     options?: { [key: string]: any }
 ) {
-    localStorage.clear();
+    return request<API.BackendResult>(`${baseUrl}/oauth/logout`, {
+        method: 'GET',
+        headers: {
+            'token': localStorage.getItem('token') || '',
+        },
+        ...(options || {}),
+    });
 }
 
 export async function getCaptcha(
