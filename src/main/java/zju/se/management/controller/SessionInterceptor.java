@@ -61,7 +61,7 @@ public class SessionInterceptor implements HandlerInterceptor {
 
     protected boolean isDebug(@NotNull HttpServletRequest req) {
         String UA = req.getHeader("User-Agent");
-        return UA.contains("PostmanRuntime") || UA.contains("curl");
+        return UA.contains("PostmanRuntime") || UA.contains("curl") || UA.contains("apifox");
     }
 
     protected void jsonResponse(String jsonStr, @NotNull HttpServletResponse res) {

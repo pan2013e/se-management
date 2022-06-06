@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 @RestController
 public class BaseController {
 
-    private final long asyncTimeout = 10 * 1000L;
+    private final long asyncTimeout = 30 * 1000L;
 
     @Autowired
     @Qualifier("asyncExecutor")

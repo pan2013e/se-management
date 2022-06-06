@@ -25,6 +25,10 @@ public class APILogService {
         return apiLogRepository.findAll();
     }
 
+    public int countAll() {
+        return apiLogRepository.countAll();
+    }
+
     public List<APILog> findByStatus(String status) {
         return apiLogRepository.findAPILogsByStatus(status);
     }

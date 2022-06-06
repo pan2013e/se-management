@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void deleteByUserName(String userName);
     boolean existsById(int id);
     boolean existsByUserName(String userName);
+    int countByRole(User.userType role);
+    int countAll();
 }

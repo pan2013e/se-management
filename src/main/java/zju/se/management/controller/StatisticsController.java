@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.WebAsyncTask;
 import zju.se.management.entity.APILog;
@@ -49,27 +50,27 @@ public class StatisticsController extends BaseController {
 
     @GetMapping("/doctors")
     public WebAsyncTask<Response<?>> getDoctorsNumber() {
-        return async(() -> ResponseOK(new Statistics(userService.getUserByRole(User.userType.DOCTOR).size()),"查询成功"));
+        return async(() -> ResponseOK(new Statistics(userService.countByRole(User.userType.DOCTOR)),"查询成功"));
     }
 
     @GetMapping("/patients")
     public WebAsyncTask<Response<?>> getPatientsNumber() {
-        return async(() -> ResponseOK(new Statistics(userService.getUserByRole(User.userType.PATIENT).size()),"查询成功"));
+        return async(() -> ResponseOK(new Statistics(userService.countByRole(User.userType.PATIENT)),"查询成功"));
     }
 
     @GetMapping("/admins")
     public WebAsyncTask<Response<?>> getAdminsNumber() {
-        return async(() -> ResponseOK(new Statistics(userService.getUserByRole(User.userType.ADMIN).size()),"查询成功"));
+        return async(() -> ResponseOK(new Statistics(userService.countByRole(User.userType.ADMIN)),"查询成功"));
     }
 
     @GetMapping("/users")
     public WebAsyncTask<Response<?>> getUsersNumber() {
-        return async(() -> ResponseOK(new Statistics(userService.getAllUsers().size()),"查询成功"));
+        return async(() -> ResponseOK(new Statistics(userService.countAll()),"查询成功"));
     }
 
     @GetMapping("/apicounts")
     public WebAsyncTask<Response<?>> getApiCounts() {
-        return async(() -> ResponseOK(new Statistics(apiLogService.findAll().size()),"查询成功"));
+        return async(() -> ResponseOK(new Statistics(apiLogService.countAll()),"查询成功"));
     }
 
     @GetMapping("/apicounts/{type}")
@@ -83,6 +84,7 @@ public class StatisticsController extends BaseController {
     }
 
     @DeleteMapping("/apilogs")
+    @Transactional
     public WebAsyncTask<Response<?>> deleteApiLogs() {
         return async(() -> {
             apiLogService.deleteAll();

@@ -77,4 +77,12 @@ public class UserService {
         return userRepository.existsById(id);
     }
 
+    public int countByRole(User.userType role) {
+        return userRepository.countByRole(role);
+    }
+
+    public int countAll() {
+        return userRepository.countAll();
+    }
+
 }

@@ -50,7 +50,7 @@ public class AuthController extends BaseController {
         return JWT_NAMESPACE + key;
     }
 
-    private void addToWhitelist(String token) {
+    private synchronized void addToWhitelist(String token) {
         try {
             Date expiry = TokenUtil.getExpireDate(token);
             long expirySeconds = expiry.getTime() / 1000;
@@ -80,7 +80,7 @@ public class AuthController extends BaseController {
         return false;
     }
 
-    private void removeFromWhitelist(String token) {
+    private synchronized void removeFromWhitelist(String token) {
         try {
             String key = getJwtKey(TokenUtil.getSignature(token));
             if(Boolean.FALSE.equals(redisTemplate.hasKey(key))) {
@@ -156,26 +156,30 @@ public class AuthController extends BaseController {
 
     @GetMapping("/logout")
     @ApiOperation(value = "用户登出", notes = "各系统可用")
-    public Response<?> logout(HttpServletRequest req) {
-        String token = req.getHeader("token");
-        removeFromWhitelist(token);
-        return ResponseOK("登出成功");
+    public WebAsyncTask<Response<?>> logout(HttpServletRequest req) {
+        return async(() -> {
+            String token = req.getHeader("token");
+            removeFromWhitelist(token);
+            return ResponseOK("登出成功");
+        });
     }
 
     @GetMapping("/captcha")
     @ApiOperation(value = "获取验证码", notes = "管理前端使用")
-    public Response<CaptchaResponseData> captcha(HttpServletResponse res) throws IOException {
-        res.setHeader("Cache-Control", "no-cache, no-store");
-        String key = UUID.randomUUID().toString();
-        String code = captchaProducer.createText();
-        BufferedImage image = captchaProducer.createImage(code);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ImageIO.write(image, "jpg", os);
-        Base64.Encoder base64 = Base64.getEncoder();
-        String base64Img = "data:image/jpeg;base64," + base64.encodeToString(os.toByteArray());
-        redisTemplate.opsForValue().set(key, code);
-        redisTemplate.expire(key, 3, TimeUnit.MINUTES);
-        return ResponseOK(new CaptchaResponseData(key, base64Img),"生成成功");
+    public WebAsyncTask<Response<?>> captcha(HttpServletResponse res) throws IOException {
+        return async(() -> {
+            res.setHeader("Cache-Control", "no-cache, no-store");
+            String key = UUID.randomUUID().toString();
+            String code = captchaProducer.createText();
+            BufferedImage image = captchaProducer.createImage(code);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write(image, "jpg", os);
+            Base64.Encoder base64 = Base64.getEncoder();
+            String base64Img = "data:image/jpeg;base64," + base64.encodeToString(os.toByteArray());
+            redisTemplate.opsForValue().set(key, code);
+            redisTemplate.expire(key, 3, TimeUnit.MINUTES);
+            return ResponseOK(new CaptchaResponseData(key, base64Img),"生成成功");
+        });
     }
 
     @PostMapping("/captcha")

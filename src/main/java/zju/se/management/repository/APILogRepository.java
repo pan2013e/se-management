@@ -8,4 +8,5 @@ import java.util.List;
 public interface APILogRepository extends JpaRepository<APILog, Integer> {
     List<APILog> findAPILogsByStatus(String status);
     int countAPILogsByStatus(String status);
+    int countAll();
 }
