@@ -1,6 +1,7 @@
 package zju.se.management.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import zju.se.management.entity.APILog;
 import zju.se.management.repository.APILogRepository;
@@ -16,7 +17,7 @@ public class APILogService {
         this.apiLogRepository = apiLogRepository;
     }
 
-    public void addAPILog(APILog apiLog) {
+    public synchronized void addAPILog(APILog apiLog) {
         apiLogRepository.save(apiLog);
     }
 
@@ -32,7 +33,7 @@ public class APILogService {
         return apiLogRepository.countAPILogsByStatus(status);
     }
 
-    public void deleteAll() {
+    public synchronized void deleteAll() {
         apiLogRepository.deleteAll();
     }
 }

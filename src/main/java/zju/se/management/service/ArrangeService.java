@@ -92,7 +92,7 @@ public class ArrangeService {
         return true;
     }
 
-    public void addArrange(int id, @NotNull Arrange arrange){
+    public synchronized void addArrange(int id, @NotNull Arrange arrange){
         if(!isValid(id,arrange)){
             throw new IllegalArgumentException("非法区间");
         }
@@ -111,11 +111,11 @@ public class ArrangeService {
         return list;
     }
 
-    public void resetArrange(int userId, Arrange.dayEnum day){
+    public synchronized void resetArrange(int userId, Arrange.dayEnum day){
         arrangeRepository.deleteAllByUserIdAndDayType(userId, day);
     }
 
-    public void deleteArrangeByUserId(int userId){
+    public synchronized void deleteArrangeByUserId(int userId){
         arrangeRepository.deleteAllByUserId(userId);
     }
 }

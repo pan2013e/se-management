@@ -43,11 +43,11 @@ public class DoctorInfoService {
         return doctorInfoRepository.findByHospitalAndDepartment(hospital, department);
     }
 
-    public void deleteDoctorInfoById(int id) throws DoctorInfoNotFoundException {
+    public synchronized void deleteDoctorInfoById(int id) throws DoctorInfoNotFoundException {
         doctorInfoRepository.deleteByUserId(id);
     }
 
-    public void addDoctorInfo(@NotNull DoctorInfo doctorInfo) throws DoctorInfoAlreadyExistsException{
+    public synchronized void addDoctorInfo(@NotNull DoctorInfo doctorInfo) throws DoctorInfoAlreadyExistsException{
         if(isExist(doctorInfo.getId())) {
             throw new DoctorInfoAlreadyExistsException();
         }
