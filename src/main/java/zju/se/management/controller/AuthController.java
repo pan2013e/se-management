@@ -156,7 +156,6 @@ public class AuthController extends BaseController {
 
     @GetMapping("/logout")
     @ApiOperation(value = "用户登出", notes = "各系统可用")
-    @Deprecated
     public Response<?> logout(HttpServletRequest req) {
         String token = req.getHeader("token");
         removeFromWhitelist(token);
