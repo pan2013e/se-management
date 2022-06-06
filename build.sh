@@ -5,4 +5,4 @@ yarn build
 rm -rf ../src/main/resources/static/dist
 cp -r dist ../src/main/resources/static/dist
 cd ..
-./mvnw clean package
+./mvnw clean package -Dmaven.test.skip=true
