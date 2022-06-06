@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.WebAsyncTask;
 import zju.se.management.authentication.CryptoUtil;
 import zju.se.management.authentication.TokenUtil;
 import zju.se.management.entity.User;
@@ -17,7 +18,6 @@ import zju.se.management.utils.*;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -45,7 +45,6 @@ public class AuthController extends BaseController {
     @PostMapping("/login")
     @ApiOperation(value = "用户登录", notes = "管理前端使用")
     public Response<?> login(
-            HttpSession session,
             @RequestParam(value = "userName") String userName,
             @RequestParam(value = "password") String password,
             @RequestParam(value = "captchaKey") String captchaKey,
@@ -88,18 +87,20 @@ public class AuthController extends BaseController {
 
     @GetMapping("/verify")
     @ApiOperation(value = "鉴权，验证登录是否有效")
-    public Response<AccessControlResponseData> verify(
+    public WebAsyncTask<Response<?>> verify(
             HttpServletRequest req, HttpServletResponse res) throws BaseException {
-        res.setHeader("Cache-Control", "no-cache, no-store");
-        String token = req.getHeader("token");
-        if(token == null || token.equals("")){
-            throw new AuthErrorException("未登录");
-        }
-        DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
-        String userName = decodedJWT.getClaim("userName").asString();
-        String role = decodedJWT.getClaim("role").asString();
-        int userId = decodedJWT.getClaim("id").asInt();
-        return ResponseOK(new AccessControlResponseData(userId, userName, role.toUpperCase()), "验证成功");
+        return async(() -> {
+            res.setHeader("Cache-Control", "no-cache, no-store");
+            String token = req.getHeader("token");
+            if(token == null || token.equals("")){
+                throw new AuthErrorException("未登录");
+            }
+            DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
+            String userName = decodedJWT.getClaim("userName").asString();
+            String role = decodedJWT.getClaim("role").asString();
+            int userId = decodedJWT.getClaim("id").asInt();
+            return ResponseOK(new AccessControlResponseData(userId, userName, role.toUpperCase()), "验证成功");
+        });
     }
 
     @GetMapping("/logout")

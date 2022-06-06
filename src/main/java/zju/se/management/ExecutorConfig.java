@@ -40,7 +40,7 @@ public class ExecutorConfig {
 
 
     @Bean("asyncExecutor")
-    public Executor asyncExecutor() {
+    public ThreadPoolTaskExecutor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         // 配置核心线程数量
         executor.setCorePoolSize(corePoolSize);
