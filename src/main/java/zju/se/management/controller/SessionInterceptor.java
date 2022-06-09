@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import zju.se.management.controller.AuthController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,12 +29,9 @@ public class SessionInterceptor implements HandlerInterceptor {
             @NotNull HttpServletResponse res,
             @NotNull Object handler) throws Exception {
 
-        res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.setHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS");
-        res.setHeader("Access-Control-Max-Age", "86400");
         res.setHeader("Access-Control-Allow-Headers", "*");
-        res.setHeader("Access-Control-Allow-Private-Network", "*");
 
         if(req.getMethod().equalsIgnoreCase("OPTIONS")) {
             return true;
