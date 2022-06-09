@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/statistics")
-@CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
 @Api(protocols = "http", consumes = "application/json", produces = "application/json", tags = "统计数据接口")
 public class StatisticsController extends BaseController {

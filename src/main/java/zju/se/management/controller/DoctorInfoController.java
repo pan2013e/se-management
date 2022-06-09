@@ -22,7 +22,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
 @Api(protocols = "http", consumes = "application/json", produces = "application/json", tags = "医生接口")
 public class DoctorInfoController extends BaseController {
@@ -44,6 +43,7 @@ public class DoctorInfoController extends BaseController {
     }
 
     @GetMapping("/hospital")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "获取所有医院名称")
     public WebAsyncTask<Response<?>> getHospital() {
         return async(() -> {
@@ -55,6 +55,7 @@ public class DoctorInfoController extends BaseController {
     }
 
     @GetMapping("/dept")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "获取所有科室名称")
     public WebAsyncTask<Response<?>> getDepartment() {
         return async(() -> {
@@ -66,6 +67,7 @@ public class DoctorInfoController extends BaseController {
     }
 
     @GetMapping("/doctor/all")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "获取所有医生信息")
     public WebAsyncTask<Response<?>> getDoctorInfo() {
         return async(() -> ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getAllDoctorInfos()),
@@ -73,6 +75,7 @@ public class DoctorInfoController extends BaseController {
     }
 
     @GetMapping("/doctor/dept/{dept}")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "获取某个科室的所有医生")
     public WebAsyncTask<Response<?>> getDoctorInfoByDept(@PathVariable("dept") String dept) {
         return async(() -> ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getDoctorInfoByDepartment(dept)),
@@ -80,6 +83,7 @@ public class DoctorInfoController extends BaseController {
     }
 
     @GetMapping("/doctor/hospital/{hospital}")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "获取某个医院的所有医生")
     public WebAsyncTask<Response<?>> getDoctorInfoByHospital(@PathVariable("hospital") String hospital) {
         return async(() -> ResponseOK(new DoctorInfoListResponseData(doctorInfoService.getDoctorInfoByHospital(hospital)),
@@ -87,6 +91,7 @@ public class DoctorInfoController extends BaseController {
     }
 
     @GetMapping("/doctor")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "获取某个医院的某个科室所有医生的信息", notes = "医院和科室如果有一项为空,则返回所有医生信息")
     public WebAsyncTask<Response<?>> getDoctorInfoByHospitalAndDept(
             @RequestParam("hospital") String hospital,

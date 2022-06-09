@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
 @Api(protocols = "http", consumes = "application/json", produces = "application/json", tags = "排班接口")
 public class ArrangeController extends BaseController {
@@ -34,6 +33,7 @@ public class ArrangeController extends BaseController {
     }
 
     @GetMapping("/arrange/{id}")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "获取某个医生的排班信息",
             notes = "data: 二维数组，第一维用星期索引，从周日(0)到周六(6)，第二维包含偶数个时间信息，对应若干对起始和结束时间")
     public WebAsyncTask<Response<?>> getArrange(@PathVariable("id") int id) {

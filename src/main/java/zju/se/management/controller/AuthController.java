@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/oauth")
-@CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
 @Api(protocols = "http", consumes = "application/json", produces = "application/json", tags = "认证接口")
 public class AuthController extends BaseController {
@@ -137,6 +136,7 @@ public class AuthController extends BaseController {
     }
 
     @GetMapping("/verify")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "鉴权，验证登录是否有效")
     public WebAsyncTask<Response<?>> verify(
             HttpServletRequest req, HttpServletResponse res) throws BaseException {
@@ -155,6 +155,7 @@ public class AuthController extends BaseController {
     }
 
     @GetMapping("/logout")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "用户登出", notes = "各系统可用")
     public WebAsyncTask<Response<?>> logout(HttpServletRequest req) {
         return async(() -> {
@@ -202,6 +203,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping("/changePassword")
+    @CrossOrigin(origins = "*")
     @ApiOperation(value = "修改密码", notes = "管理前端使用")
     public Response<?> changePassword(
             @RequestParam(value = "userName") @NotNull String userName,

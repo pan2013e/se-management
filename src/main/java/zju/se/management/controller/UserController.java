@@ -11,7 +11,6 @@ import zju.se.management.utils.*;
 
 @RestController
 @RequestMapping("/api/user")
-@CrossOrigin(origins = "*")
 @ResponseStatus(HttpStatus.OK)
 public class UserController extends BaseController {
 
