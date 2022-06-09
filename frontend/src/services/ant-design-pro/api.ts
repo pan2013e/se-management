@@ -4,7 +4,7 @@ import { request } from 'umi';
 import {api} from '@/config';
 import {message} from "antd";
 
-const baseUrl = `/${api.prefix}`;
+const baseUrl = `${api.prefix}`;
 
 /**
  * 添加预约
