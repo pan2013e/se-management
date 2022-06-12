@@ -62,7 +62,7 @@ export async function getDoctorArrange(id : number, options?:{[key:string]:any})
 
 /** 获取当前的用户 GET /api/oauth/verify */
 export async function currentUser(
-    body: { [key: string]: any },
+    body?: { [key: string]: any },
     options?: { [key: string]: any }
 ) {
     return request<API.BackendResult>(`${baseUrl}/oauth/verify`, {

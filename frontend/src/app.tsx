@@ -8,7 +8,7 @@ import {currentUser, getNotices} from './services/ant-design-pro/api';
 import { BookOutlined } from '@ant-design/icons';
 import defaultSettings from '../config/defaultSettings';
 import {createWebSocket} from "@/websocket";
-import {notification} from "antd";
+import {notification, message} from "antd";
 import {api} from '@/config';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -31,16 +31,17 @@ export async function getInitialState(): Promise<{
 }> {
     const fetchUserInfo = async () => {
         try {
-            const msg = await currentUser({
-                userName: localStorage.getItem('userName'),
-                token: localStorage.getItem('token'),
-            });
+            const msg = await currentUser();
             if(msg.code < 0){
                 localStorage.clear();
                 if(history.location.pathname !== '/'){
                     history.push(loginPath);
                 }
             } else {
+                if(msg.data.role !== 'ADMIN' && history.location.pathname !== '/' && history.location.pathname !== '/logout'){
+                    message.error('无访问权限');
+                    history.push('/');
+                }
                 return msg.data;
             }
         } catch (error) {
@@ -52,7 +53,7 @@ export async function getInitialState(): Promise<{
     // 如果不是登录页面，执行
     if (history.location.pathname !== loginPath) {
         const currentUser = await fetchUserInfo();
-        if(history.location.pathname === '/') {
+        if(history.location.pathname != '/') {
             const offlineNotices = await getNotices(currentUser?.userName);
             if (offlineNotices.code === 0 && offlineNotices.data.mqList.length > 0) {
                 for (let i = 0; i < offlineNotices.data.mqList.length; i++) {

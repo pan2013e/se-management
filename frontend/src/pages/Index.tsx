@@ -1,10 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {Card, Layout, Carousel, Divider} from 'antd';
 import Footer from '../components/Footer';
+import {api} from '@/config';
 
 import styles from './Index.less';
 import ProCard from "@ant-design/pro-card";
 import Meta from "antd/es/card/Meta";
+
+const baseUrl = `${api.protocol}://${api.host}`;
+const reservationUrl = `${baseUrl}:${api.reservation.port}/`;
+const pharmacyUrl = `${baseUrl}:${api.pharmacy.port}/${api.pharmacy.prefix}/`;
+const doctorUrl = `${baseUrl}:${api.doctor.port}/`;
 
 const Index : React.FC = () => {
     const isLogin =
@@ -51,7 +57,7 @@ const Index : React.FC = () => {
                     >
                         <Card style={{background:"transparent", padding:"0px 10px", cursor:"pointer"}} bordered={false}
                               onClick={() => {
-                                  window.location.href = '/dashboard';
+                                  window.location.href = reservationUrl;
                               }}
                         >
                             <Card
@@ -64,11 +70,11 @@ const Index : React.FC = () => {
                                 }}
                             >
                             </Card>
-                            <Meta title="挂号系统"/>
+                            <Meta title="挂号预约"/>
                         </Card>
                         <Card style={{background:"transparent", padding:"0px 10px", cursor:"pointer"}} bordered={false}
                               onClick={() => {
-                                  window.location.href = '/dashboard';
+                                  window.location.href = pharmacyUrl;
                               }}
                         >
                             <Card
@@ -85,7 +91,7 @@ const Index : React.FC = () => {
                         </Card>
                         <Card style={{background:"transparent", padding:"0px 10px", cursor:"pointer"}} bordered={false}
                               onClick={() => {
-                                  window.location.href = '/dashboard';
+                                  window.location.href = doctorUrl;
                               }}
                         >
                             <Card
@@ -98,7 +104,7 @@ const Index : React.FC = () => {
                                 }}
                             >
                             </Card>
-                            <Meta title="医生系统"/>
+                            <Meta title="医生查询"/>
                         </Card>
                         <Card style={{background:"transparent", padding:"0px 10px", cursor:"pointer"}} bordered={false}
                               onClick={() => {
