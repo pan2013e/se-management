@@ -1,3 +1,239 @@
+commit b784979be449f0fc82470c07bfd749d5ce5ee56b
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 12 13:28:22 2022 +0800
+
+    Add tests
+
+commit db7d978cc159e0daaf6e555e0c336788deeddcb9
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 12 13:28:16 2022 +0800
+
+    Fix logout
+
+commit d431edb0244beaf7868e509f2463cfaec75ff75b
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 12 13:28:10 2022 +0800
+
+    Update redirect url
+
+commit c74aab62bbb22ee63b4f2e78232b89ca9fc5f9ae
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Fri Jun 10 11:44:33 2022 +0800
+
+    Add concurrent threads
+
+commit 1aa8264fa27fc6cae2224ef54ca61e170221c586
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Fri Jun 10 11:44:20 2022 +0800
+
+    Set Tomcat I/O mode to APR
+
+commit 0da10379075b27603cae986c684678811d254cf5
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Fri Jun 10 01:09:21 2022 +0800
+
+    Fix cors policy
+
+commit ef9545d38d54dc7e233de0e2c496e3c157ab0ec0
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Fri Jun 10 01:09:12 2022 +0800
+
+    Fix api prefix
+
+commit 7632b717dc5720348ca6706ce0e41d64f1c45deb
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Fri Jun 10 00:57:04 2022 +0800
+
+    Simplify baseURL in production mode
+
+commit 65fb1b93309efbbcffbbc26981bd9061726d1dc3
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Fri Jun 10 00:55:53 2022 +0800
+
+    Change cors policies
+
+commit 969498c7da5b951cd0320e94bf6ecbae4642a65a
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Fri Jun 10 00:41:58 2022 +0800
+
+    Prettify homepage
+
+commit 853a9a2bd8a143c31b63e880fa4ce83c60921be3
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 21:04:30 2022 +0800
+
+    Bug fix
+
+commit c63070bdf9c5803fbdc8d6d399f5304c9690b8a6
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 20:58:45 2022 +0800
+
+    DB performance enhance
+
+commit 565a39cda1b750fafd27af0e7cbcc85b44ef4a83
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 13:59:28 2022 +0800
+
+    Fix embedded redis IP
+
+commit 1599433d5b19290b9dd6a8f77399e0b8ddb52abe
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 13:54:44 2022 +0800
+
+    Remove deprecation notice
+
+commit e65d51deef901dc84fbb054a40f3b7113f0fc798
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 13:54:26 2022 +0800
+
+    Call backend logout
+
+commit d071c20264ef8880b6af4883ad20b27d1a37a171
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 13:50:41 2022 +0800
+
+    Implement manual token invalidation
+
+commit abd3fa26d713c01872da973bfb8be087a74cecbe
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 12:58:57 2022 +0800
+
+    Redirect if already login
+
+commit 74d6e11af8d8e3c8f58e8267ecadb02ca787d556
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 12:58:22 2022 +0800
+
+    Add tests
+
+commit d8475578c395022759699e04615c0794909e8e6f
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 12:58:08 2022 +0800
+
+    Skip test when building
+
+commit 0e65c2c3b832d51d7a743565df31c6d1c2085cd1
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 10:58:59 2022 +0800
+
+    Optimize tomcat
+
+commit 08a5277e86558fcad3ba84fef239ba752efafdef
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 09:53:50 2022 +0800
+
+    Fix Chrome CORS issue
+
+commit beeeb8186cb703e937e8fd61b66466007b5c3a55
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 09:37:55 2022 +0800
+
+    Refactor methods to async
+
+commit 8ee5257920ac7da96b3aed6b0aa8c28c6bc6497b
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 08:39:14 2022 +0800
+
+    Add async thread pool
+
+commit b1be25e37c30eb4127459a18e96f82f981ee11f0
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Mon Jun 6 08:38:59 2022 +0800
+
+    Make synchronized
+
+commit 3b3904bfd89c97a96e86ce451afebd4db01098d0
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 22:33:00 2022 +0800
+
+    Add README
+
+commit 26c050e399d9592ca23ac597b80260692e307da4
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 22:19:15 2022 +0800
+
+    Fix routing issues
+
+commit f9a9f5a40a5639b838cf42179292224b2af2d037
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 22:16:27 2022 +0800
+
+    Fix routing issues
+
+commit 56abfdb1b22787159e062b828633ffc9cddacefd
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 22:04:37 2022 +0800
+
+    Fix routing issues
+
+commit 3678765226d12ac296fb80fc9919c2776d154679
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 22:04:25 2022 +0800
+
+    Add logout
+
+commit 1a11b67613ecec3bc7e11a14819233860d9164db
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 21:32:20 2022 +0800
+
+    Enable gzip
+
+commit deff02ba7b759ba3216b244567608c9d80a3a979
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 21:28:07 2022 +0800
+
+    Modify redirection
+
+commit f3168463cb2b40775953ab63046fc2cca1c73110
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 21:27:49 2022 +0800
+
+    Set title
+
+commit b4f39ad7c353e5576e739c41d4e46cfad5775d07
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 21:27:39 2022 +0800
+
+    Modify routes
+
+commit 7882f631765205faea47198cc981ea3942e72d61
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 21:27:23 2022 +0800
+
+    Remove mock files
+
+commit 18ae60978c65efad594d826f5b8150af1a993d4a
+Author: silent-lindsay <3190105609@zju.edu.cn>
+Date:   Sun Jun 5 18:03:51 2022 +0800
+
+    Index page
+
+commit 07151af1c1a0b0a49c6e6ac05eb4dec46052f225
+Merge: 645b4ea 68cf0ae
+Author: silent-lindsay <3190105609@zju.edu.cn>
+Date:   Sun Jun 5 17:29:34 2022 +0800
+
+    Merge branch 'main' of https://github.com/pan2013e/se-management
+    Merge
+
+commit 645b4eafc92759a297b820fc00190576f5be6b50
+Author: silent-lindsay <3190105609@zju.edu.cn>
+Date:   Sun Jun 5 17:29:01 2022 +0800
+
+    starting page
+
+commit 68cf0ae575e43b2d4e43e779ba6175dfec72f40d
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 16:52:27 2022 +0800
+
+    Update arrange rules
+
+commit 205c4c87943a44a06e285f950bf9d471ef89da06
+Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
+Date:   Sun Jun 5 16:28:55 2022 +0800
+
+    Add CHANGELOG
+
 commit b7efdca2328c9120a1a420129add5897a9229f2b
 Author: Zhiyuan Pan <zy_pan@zju.edu.cn>
 Date:   Sun Jun 5 16:27:47 2022 +0800
