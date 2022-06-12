@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import zju.se.management.authentication.TokenUtil;
 import zju.se.management.service.ArrangeService;
+import zju.se.management.service.DoctorInfoService;
 import zju.se.management.service.UserService;
 
 @RunWith(SpringRunner.class)
@@ -23,7 +24,9 @@ public class ConcurrentTests {
     @Autowired
     private ArrangeService arrangeService;
 
-    @Test
+    @Autowired
+    private DoctorInfoService doctorInfoService;
+
     public void contextLoads() {
     }
 
@@ -34,12 +37,12 @@ public class ConcurrentTests {
     @PerfTest(duration = 10*1000)
     public void userVerifyTest() {
         try {
-            String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6MSwidXNlck5hbWUiOiJhZG1pbiIsImV4cCI6MTY1NDU2NzEwM30.0Fsc6XhAIOQdzFiGTVUrLJ5Dq5it8AUL4_Yq88kEG4s";
+            String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJpZCI6MSwidXNlck5hbWUiOiJhZG1pbiIsImV4cCI6MTY1NDk0NjM4M30.YGD53prpGuMYjti5BELaeqINvtF4SPLjBY5PHUaACK4";
             DecodedJWT decodedJWT = TokenUtil.decodeToken(token);
             String userName = decodedJWT.getClaim("userName").asString();
             String role = decodedJWT.getClaim("role").asString();
             int userId = decodedJWT.getClaim("id").asInt();
-        } catch (Exception e){
+        } catch (Exception ignored){
         }
     }
 
@@ -48,7 +51,9 @@ public class ConcurrentTests {
     public void databaseTest(){
         try{
             arrangeService.getAllArranges();
-        }catch (Exception e){
+            userService.getAllUsers();
+            doctorInfoService.getAllDoctorInfos();
+        }catch (Exception ignored){
         }
     }
 
